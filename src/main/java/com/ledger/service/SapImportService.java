@@ -1,8 +1,7 @@
 package com.ledger.service;
 
-import com.ledger.entity.ActualLine;
-import com.ledger.entity.SapImport;
-import com.ledger.entity.SapImportStatus;
+import com.ledger.dto.JournalLineRequest;
+import com.ledger.entity.*;
 import com.ledger.repository.ActualLineRepository;
 import com.ledger.repository.FiscalPeriodRepository;
 import com.ledger.repository.SapImportRepository;
@@ -25,6 +24,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * SAP import pipeline: Upload → Parse → Dedup → Stage.
@@ -48,12 +48,16 @@ public class SapImportService {
     private static final String[] COL_GL = {"GL Account", "GL", "G/L Account"};
     private static final String[] COL_DESCRIPTION = {"Description", "Text", "Ref. Doc. Text", "Item Text"};
 
+    private final JournalService journalService;
+
     public SapImportService(SapImportRepository sapImportRepository,
                              ActualLineRepository actualLineRepository,
-                             FiscalPeriodRepository fiscalPeriodRepository) {
+                             FiscalPeriodRepository fiscalPeriodRepository,
+                             JournalService journalService) {
         this.sapImportRepository = sapImportRepository;
         this.actualLineRepository = actualLineRepository;
         this.fiscalPeriodRepository = fiscalPeriodRepository;
+        this.journalService = journalService;
     }
 
     /**
@@ -133,6 +137,85 @@ public class SapImportService {
         sapImportRepository.save(sapImport);
 
         return sapImport;
+    }
+
+    /**
+     * Commit a staged import: create ACTUAL_IMPORT journal entries for all non-duplicate lines.
+     * Spec: 05-sap-ingestion.md Step 6, 02-journal-ledger.md 5.5
+     */
+    public SapImport commitImport(java.util.UUID importId, String committedBy) {
+        SapImport sapImport = sapImportRepository.findById(importId)
+                .orElseThrow(() -> new IllegalArgumentException("Import not found: " + importId));
+
+        if (sapImport.getStatus() != SapImportStatus.STAGED) {
+            throw new IllegalStateException("Only STAGED imports can be committed");
+        }
+
+        List<ActualLine> newLines = actualLineRepository.findBySapImportAndDuplicate(sapImport, false);
+
+        for (ActualLine line : newLines) {
+            createActualImportJournal(line, committedBy);
+        }
+
+        sapImport.setStatus(SapImportStatus.COMMITTED);
+        sapImportRepository.save(sapImport);
+        return sapImport;
+    }
+
+    /**
+     * Reject a staged import. Lines remain in DB for audit but no journal entries created.
+     * Spec: 05-sap-ingestion.md Section 5
+     */
+    public SapImport rejectImport(java.util.UUID importId) {
+        SapImport sapImport = sapImportRepository.findById(importId)
+                .orElseThrow(() -> new IllegalArgumentException("Import not found: " + importId));
+
+        if (sapImport.getStatus() != SapImportStatus.STAGED) {
+            throw new IllegalStateException("Only STAGED imports can be rejected");
+        }
+
+        sapImport.setStatus(SapImportStatus.REJECTED);
+        sapImportRepository.save(sapImport);
+        return sapImport;
+    }
+
+    /**
+     * Create an ACTUAL_IMPORT journal entry for a single actual line.
+     * Debit ACTUAL / Credit VARIANCE_RESERVE for positive amounts.
+     * For negative amounts (reversals), credit ACTUAL / debit VARIANCE_RESERVE.
+     * Spec: 02-journal-ledger.md Section 5.5, 05-sap-ingestion.md Step 6
+     */
+    private void createActualImportJournal(ActualLine line, String createdBy) {
+        UUID periodId = line.getFiscalPeriodId();
+        BigDecimal amount = line.getAmount().abs();
+        boolean isReversal = line.getAmount().compareTo(BigDecimal.ZERO) < 0;
+
+        List<JournalLineRequest> lines;
+        if (isReversal) {
+            // Reversal: credit ACTUAL, debit VARIANCE_RESERVE
+            lines = List.of(
+                    new JournalLineRequest(AccountType.VARIANCE_RESERVE, null, null,
+                            null, periodId, amount, BigDecimal.ZERO, "ACTUAL_LINE", line.getActualId()),
+                    new JournalLineRequest(AccountType.ACTUAL, null, null,
+                            null, periodId, BigDecimal.ZERO, amount, "ACTUAL_LINE", line.getActualId())
+            );
+        } else {
+            // Normal: debit ACTUAL, credit VARIANCE_RESERVE
+            lines = List.of(
+                    new JournalLineRequest(AccountType.ACTUAL, null, null,
+                            null, periodId, amount, BigDecimal.ZERO, "ACTUAL_LINE", line.getActualId()),
+                    new JournalLineRequest(AccountType.VARIANCE_RESERVE, null, null,
+                            null, periodId, BigDecimal.ZERO, amount, "ACTUAL_LINE", line.getActualId())
+            );
+        }
+
+        journalService.createEntry(
+                JournalEntryType.ACTUAL_IMPORT,
+                line.getPostingDate(),
+                "Actual import: " + line.getSapDocumentNumber() + " $" + line.getAmount(),
+                createdBy,
+                lines
+        );
     }
 
     private List<ParsedRow> parseCsv(MultipartFile file) throws Exception {

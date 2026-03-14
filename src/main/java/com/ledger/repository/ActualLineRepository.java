@@ -1,9 +1,11 @@
 package com.ledger.repository;
 
 import com.ledger.entity.ActualLine;
+import com.ledger.entity.SapImport;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,4 +20,9 @@ public interface ActualLineRepository extends JpaRepository<ActualLine, UUID> {
      * Check for an existing non-duplicate line with the same hash (BR-08).
      */
     Optional<ActualLine> findByLineHashAndDuplicateFalse(String lineHash);
+
+    /**
+     * Find all lines for a given import with the specified duplicate status.
+     */
+    List<ActualLine> findBySapImportAndDuplicate(SapImport sapImport, boolean duplicate);
 }
