@@ -19,5 +19,7 @@ public interface ProjectRepository extends JpaRepository<Project, String> {
 
     List<Project> findByContractContractIdAndFundingSource(UUID contractId, FundingSource fundingSource);
 
+    List<Project> findByFundingSource(FundingSource fundingSource);
+
     boolean existsByProjectId(String projectId);
 }
