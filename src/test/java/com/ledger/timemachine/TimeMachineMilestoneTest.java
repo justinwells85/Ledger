@@ -167,7 +167,7 @@ class TimeMachineMilestoneTest extends BaseIntegrationTest {
                 LocalDate.of(2026, 3, 1), "Cancelled project", "system");
 
         mockMvc.perform(get("/api/v1/projects/{projectId}/milestones", projectId)
-                        .param("asOfDate", "2026-03-15"))
+                        .param("asOfDate", "2026-03-10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].currentVersion.plannedAmount").value(0.00));

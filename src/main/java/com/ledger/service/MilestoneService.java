@@ -258,10 +258,15 @@ public class MilestoneService {
     /**
      * Get all milestones for a project as of a given date, with their planned amounts as of that date.
      * Milestones with no version existing on or before asOfDate are excluded (not yet created).
-     * Spec: 08-time-machine.md Section 2-4, BR-41
+     * Spec: 08-time-machine.md Section 2-4, BR-41, BR-53
      */
     @Transactional(readOnly = true)
     public List<MilestoneAsOf> getMilestonesAsOf(String projectId, LocalDate asOfDate) {
+        // BR-53: Time machine date cannot be in the future
+        if (asOfDate != null && asOfDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException(
+                    "Time machine date cannot be in the future (BR-53): " + asOfDate);
+        }
         return milestoneRepository.findByProjectProjectId(projectId).stream()
                 .map(m -> {
                     Optional<MilestoneVersion> version = (asOfDate != null)

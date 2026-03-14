@@ -149,10 +149,16 @@ public class ReconciliationService {
     /**
      * Get derived reconciliation status for a milestone as of a given date (time machine).
      * When asOfDate is null, returns current state.
-     * Spec: 06-reconciliation.md Section 4-5, 08-time-machine.md Section 2-3, BR-52
+     * Spec: 06-reconciliation.md Section 4-5, 08-time-machine.md Section 2-3, BR-52, BR-53
      */
     @Transactional(readOnly = true)
     public ReconciliationStatus getStatus(UUID milestoneId, LocalDate asOfDate) {
+        // BR-53: Time machine date cannot be in the future
+        if (asOfDate != null && asOfDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException(
+                    "Time machine date cannot be in the future (BR-53): " + asOfDate);
+        }
+
         MilestoneVersion current;
         BigDecimal reconciled;
         BigDecimal invoiceTotal;
