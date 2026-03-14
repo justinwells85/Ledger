@@ -1,5 +1,6 @@
 package com.ledger.controller;
 
+import com.ledger.dto.MilestoneCancelRequest;
 import com.ledger.dto.MilestoneCreateRequest;
 import com.ledger.dto.MilestoneResponse;
 import com.ledger.dto.MilestoneVersionAdjustRequest;
@@ -99,5 +100,25 @@ public class MilestoneController {
                 .map(MilestoneVersionResponse::from)
                 .toList();
         return ResponseEntity.ok(history);
+    }
+
+    /**
+     * POST /api/v1/milestones/{milestoneId}/cancel
+     * Cancel a milestone by creating a v with planned_amount = 0.
+     * Spec: 04-milestone-versioning.md Section 4 (Cancelling), V-09
+     */
+    @PostMapping("/milestones/{milestoneId}/cancel")
+    public ResponseEntity<?> cancelMilestone(@PathVariable UUID milestoneId,
+                                              @RequestBody MilestoneCancelRequest request) {
+        try {
+            java.time.LocalDate effectiveDate = request.effectiveDate() != null
+                    ? request.effectiveDate()
+                    : java.time.LocalDate.now();
+            MilestoneVersion cancelled = milestoneService.cancelMilestone(
+                    milestoneId, effectiveDate, request.reason(), "system");
+            return ResponseEntity.status(HttpStatus.CREATED).body(MilestoneVersionResponse.from(cancelled));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

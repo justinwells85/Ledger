@@ -231,6 +231,21 @@ public class MilestoneService {
     }
 
     /**
+     * Cancel a milestone by creating a version with planned_amount = 0.
+     * Spec: 04-milestone-versioning.md Section 4 (Cancelling), V-09
+     */
+    public MilestoneVersion cancelMilestone(UUID milestoneId,
+                                             LocalDate effectiveDate,
+                                             String reason,
+                                             String createdBy) {
+        return createVersion(milestoneId, BigDecimal.ZERO,
+                milestoneVersionRepository.findCurrentVersion(milestoneId)
+                        .orElseThrow(() -> new IllegalArgumentException("Milestone not found: " + milestoneId))
+                        .getFiscalPeriod().getPeriodId(),
+                effectiveDate, reason, createdBy);
+    }
+
+    /**
      * Get the net planned balance for a milestone as of a given date.
      * Delegates to JournalService.
      */
