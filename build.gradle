@@ -30,6 +30,12 @@ dependencies {
     // PostgreSQL driver
     runtimeOnly 'org.postgresql:postgresql'
 
+    // CSV parsing (SAP imports)
+    implementation 'org.apache.commons:commons-csv:1.10.0'
+
+    // Excel parsing (SAP imports — XLSX/XLS)
+    implementation 'org.apache.poi:poi-ooxml:5.3.0'
+
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
