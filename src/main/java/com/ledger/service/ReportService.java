@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -21,13 +23,16 @@ public class ReportService {
     private final ProjectRepository projectRepository;
     private final MilestoneService milestoneService;
     private final ReconciliationService reconciliationService;
+    private final ReconciliationRepository reconciliationRepository;
 
     public ReportService(ProjectRepository projectRepository,
                          MilestoneService milestoneService,
-                         ReconciliationService reconciliationService) {
+                         ReconciliationService reconciliationService,
+                         ReconciliationRepository reconciliationRepository) {
         this.projectRepository = projectRepository;
         this.milestoneService = milestoneService;
         this.reconciliationService = reconciliationService;
+        this.reconciliationRepository = reconciliationRepository;
     }
 
     /**
@@ -224,6 +229,66 @@ public class ReportService {
         return new ReconciliationStatusReport(fiscalYear, asOfDate, rows);
     }
 
+    /**
+     * Generate an open accruals report sorted by age (oldest first).
+     * Only milestones with openAccrualCount > 0 appear.
+     * Spec: 07-accrual-lifecycle.md Section 6, 09-reporting.md Section 2.6
+     */
+    public OpenAccrualsReport getOpenAccrualsReport(UUID contractId,
+                                                      String projectId,
+                                                      String fiscalYear) {
+        if (fiscalYear == null || fiscalYear.isBlank()) {
+            throw new IllegalArgumentException("fiscalYear is required");
+        }
+
+        List<Project> projects = resolveProjects(contractId, projectId, null);
+        List<OpenAccrualsReportRow> rows = new ArrayList<>();
+
+        for (Project project : projects) {
+            List<MilestoneService.MilestoneAsOf> milestones =
+                    milestoneService.getMilestonesAsOf(project.getProjectId(), null);
+
+            for (MilestoneService.MilestoneAsOf mao : milestones) {
+                String periodKey = mao.version().getFiscalPeriod().getPeriodKey();
+                if (!periodKey.startsWith(fiscalYear + "-")) {
+                    continue;
+                }
+
+                ReconciliationService.AccrualStatus accrualStatus =
+                        reconciliationService.getAccrualStatus(mao.milestone().getMilestoneId());
+
+                if (accrualStatus.openAccrualCount() <= 0) {
+                    continue;
+                }
+
+                // Compute age of oldest open accrual
+                List<Reconciliation> accruals = reconciliationRepository
+                        .findByMilestoneIdAndCategory(mao.milestone().getMilestoneId(),
+                                ReconciliationCategory.ACCRUAL);
+                long ageDays = accruals.stream()
+                        .map(Reconciliation::getReconciledAt)
+                        .mapToLong(t -> ChronoUnit.DAYS.between(t, Instant.now()))
+                        .max()
+                        .orElse(0L);
+
+                rows.add(new OpenAccrualsReportRow(
+                        project.getContract().getName(),
+                        project.getName(),
+                        mao.milestone().getName(),
+                        periodKey,
+                        accrualStatus.openAccrualCount(),
+                        ageDays,
+                        accrualStatus.accrualStatus()
+                ));
+            }
+        }
+
+        // Sort by ageDays descending (oldest first)
+        rows.sort((a, b) -> Long.compare(b.ageDays(), a.ageDays()));
+
+        return new OpenAccrualsReport(fiscalYear, rows);
+    }
+
     private List<Project> resolveProjects(UUID contractId, String projectId, String fundingSource) {
         // Single project filter
         if (projectId != null) {
@@ -303,5 +368,22 @@ public class ReportService {
             BigDecimal totalActual,
             BigDecimal remaining,
             String status
+    ) {}
+
+    /** Open accruals report response. */
+    public record OpenAccrualsReport(
+            String fiscalYear,
+            List<OpenAccrualsReportRow> rows
+    ) {}
+
+    /** One row in the open accruals report (one per milestone with open accruals). */
+    public record OpenAccrualsReportRow(
+            String contractName,
+            String projectName,
+            String milestoneName,
+            String fiscalPeriod,
+            int openAccrualCount,
+            long ageDays,
+            String accrualStatus
     ) {}
 }

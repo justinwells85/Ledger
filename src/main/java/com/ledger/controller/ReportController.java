@@ -23,6 +23,25 @@ public class ReportController {
     }
 
     /**
+     * GET /api/v1/reports/open-accruals
+     * Open accruals report sorted by age (oldest first).
+     * Spec: 07-accrual-lifecycle.md Section 6, 09-reporting.md Section 2.6
+     */
+    @GetMapping("/open-accruals")
+    public ResponseEntity<?> getOpenAccrualsReport(
+            @RequestParam(required = false) UUID contractId,
+            @RequestParam(required = false) String projectId,
+            @RequestParam String fiscalYear) {
+        try {
+            ReportService.OpenAccrualsReport report = reportService.getOpenAccrualsReport(
+                    contractId, projectId, fiscalYear);
+            return ResponseEntity.ok(report);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    /**
      * GET /api/v1/reports/reconciliation-status
      * Reconciliation status per milestone.
      * Spec: 09-reporting.md Section 2.4, 13-api-design.md Section 10
