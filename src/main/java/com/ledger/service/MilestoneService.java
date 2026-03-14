@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -253,4 +254,25 @@ public class MilestoneService {
     public BigDecimal getPlannedBalance(UUID milestoneId, LocalDate asOfDate) {
         return journalService.getPlannedBalance(milestoneId, asOfDate);
     }
+
+    /**
+     * Get all milestones for a project as of a given date, with their planned amounts as of that date.
+     * Milestones with no version existing on or before asOfDate are excluded (not yet created).
+     * Spec: 08-time-machine.md Section 2-4, BR-41
+     */
+    @Transactional(readOnly = true)
+    public List<MilestoneAsOf> getMilestonesAsOf(String projectId, LocalDate asOfDate) {
+        return milestoneRepository.findByProjectProjectId(projectId).stream()
+                .map(m -> {
+                    Optional<MilestoneVersion> version = (asOfDate != null)
+                            ? milestoneVersionRepository.findVersionAsOfDate(m.getMilestoneId(), asOfDate)
+                            : milestoneVersionRepository.findCurrentVersion(m.getMilestoneId());
+                    return version.map(v -> new MilestoneAsOf(m, v)).orElse(null);
+                })
+                .filter(mao -> mao != null)
+                .toList();
+    }
+
+    /** Milestone with its version as of a specific date. */
+    public record MilestoneAsOf(Milestone milestone, MilestoneVersion version) {}
 }

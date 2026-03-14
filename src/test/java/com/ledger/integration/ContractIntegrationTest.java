@@ -1,8 +1,7 @@
 package com.ledger.integration;
 
 import com.ledger.BaseIntegrationTest;
-import com.ledger.repository.AuditLogRepository;
-import com.ledger.repository.ContractRepository;
+import com.ledger.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +25,28 @@ class ContractIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ContractRepository contractRepository;
-
-    @Autowired
-    private AuditLogRepository auditLogRepository;
+    @Autowired private ContractRepository contractRepository;
+    @Autowired private AuditLogRepository auditLogRepository;
+    @Autowired private ReconciliationRepository reconciliationRepository;
+    @Autowired private JournalLineRepository journalLineRepository;
+    @Autowired private JournalEntryRepository journalEntryRepository;
+    @Autowired private ActualLineRepository actualLineRepository;
+    @Autowired private SapImportRepository sapImportRepository;
+    @Autowired private MilestoneVersionRepository milestoneVersionRepository;
+    @Autowired private MilestoneRepository milestoneRepository;
+    @Autowired private ProjectRepository projectRepository;
 
     @BeforeEach
     void cleanUp() {
         auditLogRepository.deleteAll();
+        reconciliationRepository.deleteAll();
+        journalLineRepository.deleteAll();
+        journalEntryRepository.deleteAll();
+        actualLineRepository.deleteAll();
+        sapImportRepository.deleteAll();
+        milestoneVersionRepository.deleteAll();
+        milestoneRepository.deleteAll();
+        projectRepository.deleteAll();
         contractRepository.deleteAll();
     }
 

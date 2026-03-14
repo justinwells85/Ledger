@@ -41,6 +41,24 @@ public interface ReconciliationRepository extends JpaRepository<Reconciliation, 
     BigDecimal sumReconciledAmountByCategory(@Param("milestoneId") UUID milestoneId,
                                               @Param("category") ReconciliationCategory category);
 
+    /**
+     * Sum of actual amounts where reconciled_at <= asOfInstant (time machine).
+     * Spec: 08-time-machine.md Section 2
+     */
+    @Query("SELECT COALESCE(SUM(a.amount), 0) FROM Reconciliation r " +
+           "JOIN ActualLine a ON a.actualId = r.actualId " +
+           "WHERE r.milestoneId = :milestoneId AND r.reconciledAt <= :asOfInstant")
+    BigDecimal sumReconciledAmountAsOf(@Param("milestoneId") UUID milestoneId,
+                                        @Param("asOfInstant") Instant asOfInstant);
+
+    @Query("SELECT COALESCE(SUM(a.amount), 0) FROM Reconciliation r " +
+           "JOIN ActualLine a ON a.actualId = r.actualId " +
+           "WHERE r.milestoneId = :milestoneId AND r.category = :category " +
+           "AND r.reconciledAt <= :asOfInstant")
+    BigDecimal sumReconciledAmountByCategoryAsOf(@Param("milestoneId") UUID milestoneId,
+                                                  @Param("category") ReconciliationCategory category,
+                                                  @Param("asOfInstant") Instant asOfInstant);
+
     /** Backdates reconciled_at for testing aging logic. */
     @Modifying
     @Query(value = "UPDATE reconciliation SET reconciled_at = :ts WHERE reconciliation_id = :id", nativeQuery = true)

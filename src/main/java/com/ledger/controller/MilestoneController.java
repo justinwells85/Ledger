@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +32,23 @@ public class MilestoneController {
                                 MilestoneVersionRepository milestoneVersionRepository) {
         this.milestoneService = milestoneService;
         this.milestoneVersionRepository = milestoneVersionRepository;
+    }
+
+    /**
+     * GET /api/v1/projects/{projectId}/milestones?asOfDate=...
+     * Return milestones for a project, each with the version effective as of the given date.
+     * Milestones with no version as of the date are excluded.
+     * Spec: 08-time-machine.md Section 2-4, BR-41
+     */
+    @GetMapping("/projects/{projectId}/milestones")
+    public ResponseEntity<List<MilestoneResponse>> getMilestonesAsOf(
+            @PathVariable String projectId,
+            @RequestParam(required = false) LocalDate asOfDate) {
+        List<MilestoneResponse> result = milestoneService.getMilestonesAsOf(projectId, asOfDate)
+                .stream()
+                .map(mao -> MilestoneResponse.from(mao.milestone(), mao.version()))
+                .toList();
+        return ResponseEntity.ok(result);
     }
 
     /**

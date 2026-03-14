@@ -44,8 +44,12 @@ class SapImportCommitTest extends BaseIntegrationTest {
     @Autowired
     private FiscalPeriodRepository fiscalPeriodRepository;
 
+    @Autowired
+    private ReconciliationRepository reconciliationRepository;
+
     @BeforeEach
     void setUp() {
+        reconciliationRepository.deleteAll();
         journalLineRepository.deleteAll();
         journalEntryRepository.deleteAll();
         actualLineRepository.deleteAll();

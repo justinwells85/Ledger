@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -142,11 +143,47 @@ public class ReconciliationService {
      */
     @Transactional(readOnly = true)
     public ReconciliationStatus getStatus(UUID milestoneId) {
-        MilestoneVersion current = milestoneVersionRepository.findCurrentVersion(milestoneId)
-                .orElseThrow(() -> new IllegalArgumentException("Milestone not found: " + milestoneId));
+        return getStatus(milestoneId, null);
+    }
+
+    /**
+     * Get derived reconciliation status for a milestone as of a given date (time machine).
+     * When asOfDate is null, returns current state.
+     * Spec: 06-reconciliation.md Section 4-5, 08-time-machine.md Section 2-3, BR-52
+     */
+    @Transactional(readOnly = true)
+    public ReconciliationStatus getStatus(UUID milestoneId, LocalDate asOfDate) {
+        MilestoneVersion current;
+        BigDecimal reconciled;
+        BigDecimal invoiceTotal;
+        BigDecimal accrualTotal;
+        BigDecimal reversalTotal;
+
+        if (asOfDate != null) {
+            // Time machine: use version effective as of date, and filter reconciliations by reconciled_at
+            current = milestoneVersionRepository.findVersionAsOfDate(milestoneId, asOfDate)
+                    .orElseThrow(() -> new IllegalArgumentException("Milestone not found: " + milestoneId));
+            Instant asOfInstant = asOfDate.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
+            reconciled = reconciliationRepository.sumReconciledAmountAsOf(milestoneId, asOfInstant);
+            invoiceTotal = reconciliationRepository.sumReconciledAmountByCategoryAsOf(
+                    milestoneId, ReconciliationCategory.INVOICE, asOfInstant);
+            accrualTotal = reconciliationRepository.sumReconciledAmountByCategoryAsOf(
+                    milestoneId, ReconciliationCategory.ACCRUAL, asOfInstant);
+            reversalTotal = reconciliationRepository.sumReconciledAmountByCategoryAsOf(
+                    milestoneId, ReconciliationCategory.ACCRUAL_REVERSAL, asOfInstant);
+        } else {
+            current = milestoneVersionRepository.findCurrentVersion(milestoneId)
+                    .orElseThrow(() -> new IllegalArgumentException("Milestone not found: " + milestoneId));
+            reconciled = reconciliationRepository.sumReconciledAmount(milestoneId);
+            invoiceTotal = reconciliationRepository.sumReconciledAmountByCategory(
+                    milestoneId, ReconciliationCategory.INVOICE);
+            accrualTotal = reconciliationRepository.sumReconciledAmountByCategory(
+                    milestoneId, ReconciliationCategory.ACCRUAL);
+            reversalTotal = reconciliationRepository.sumReconciledAmountByCategory(
+                    milestoneId, ReconciliationCategory.ACCRUAL_REVERSAL);
+        }
 
         BigDecimal planned = current.getPlannedAmount();
-        BigDecimal reconciled = reconciliationRepository.sumReconciledAmount(milestoneId);
         BigDecimal remaining = planned.subtract(reconciled);
 
         // Load tolerance config
@@ -176,12 +213,6 @@ public class ReconciliationService {
             }
         }
 
-        BigDecimal invoiceTotal = reconciliationRepository
-                .sumReconciledAmountByCategory(milestoneId, ReconciliationCategory.INVOICE);
-        BigDecimal accrualTotal = reconciliationRepository
-                .sumReconciledAmountByCategory(milestoneId, ReconciliationCategory.ACCRUAL);
-        BigDecimal reversalTotal = reconciliationRepository
-                .sumReconciledAmountByCategory(milestoneId, ReconciliationCategory.ACCRUAL_REVERSAL);
         BigDecimal accrualNet = accrualTotal.add(reversalTotal);
 
         return new ReconciliationStatus(milestoneId, planned, reconciled, remaining,
