@@ -1,8 +1,7 @@
 package com.ledger.sap;
 
 import com.ledger.BaseIntegrationTest;
-import com.ledger.repository.ActualLineRepository;
-import com.ledger.repository.SapImportRepository;
+import com.ledger.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,20 @@ class SapImportUploadTest extends BaseIntegrationTest {
     @Autowired
     private ActualLineRepository actualLineRepository;
 
+    @Autowired
+    private ReconciliationRepository reconciliationRepository;
+
+    @Autowired
+    private JournalLineRepository journalLineRepository;
+
+    @Autowired
+    private JournalEntryRepository journalEntryRepository;
+
     @BeforeEach
     void setUp() {
+        reconciliationRepository.deleteAll();
+        journalLineRepository.deleteAll();
+        journalEntryRepository.deleteAll();
         actualLineRepository.deleteAll();
         sapImportRepository.deleteAll();
     }

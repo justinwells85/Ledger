@@ -1,8 +1,7 @@
 package com.ledger.sap;
 
 import com.ledger.BaseIntegrationTest;
-import com.ledger.repository.ActualLineRepository;
-import com.ledger.repository.SapImportRepository;
+import com.ledger.repository.*;
 import com.ledger.service.SapImportService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,8 +34,20 @@ class SapImportDedupTest extends BaseIntegrationTest {
     @Autowired
     private SapImportService sapImportService;
 
+    @Autowired
+    private ReconciliationRepository reconciliationRepository;
+
+    @Autowired
+    private JournalLineRepository journalLineRepository;
+
+    @Autowired
+    private JournalEntryRepository journalEntryRepository;
+
     @BeforeEach
     void setUp() {
+        reconciliationRepository.deleteAll();
+        journalLineRepository.deleteAll();
+        journalEntryRepository.deleteAll();
         actualLineRepository.deleteAll();
         sapImportRepository.deleteAll();
     }
