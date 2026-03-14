@@ -23,6 +23,48 @@ public class ReportController {
     }
 
     /**
+     * GET /api/v1/reports/reconciliation-status
+     * Reconciliation status per milestone.
+     * Spec: 09-reporting.md Section 2.4, 13-api-design.md Section 10
+     */
+    @GetMapping("/reconciliation-status")
+    public ResponseEntity<?> getReconciliationStatusReport(
+            @RequestParam(required = false) UUID contractId,
+            @RequestParam(required = false) String projectId,
+            @RequestParam String fiscalYear,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) LocalDate asOfDate) {
+        try {
+            ReportService.ReconciliationStatusReport report = reportService.getReconciliationStatusReport(
+                    contractId, projectId, fiscalYear, status, asOfDate);
+            return ResponseEntity.ok(report);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    /**
+     * GET /api/v1/reports/variance
+     * Variance report (planned vs. actual) grouped by project.
+     * Spec: 09-reporting.md Section 2.3, 13-api-design.md Section 10
+     */
+    @GetMapping("/variance")
+    public ResponseEntity<?> getVarianceReport(
+            @RequestParam(required = false) UUID contractId,
+            @RequestParam(required = false) String projectId,
+            @RequestParam String fiscalYear,
+            @RequestParam(required = false) String fundingSource,
+            @RequestParam(required = false) LocalDate asOfDate) {
+        try {
+            ReportService.VarianceReport report = reportService.getVarianceReport(
+                    contractId, projectId, fiscalYear, fundingSource, asOfDate);
+            return ResponseEntity.ok(report);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    /**
      * GET /api/v1/reports/budget
      * Budget plan report grouped by project.
      * Spec: 09-reporting.md Section 2.1, 13-api-design.md Section 10
