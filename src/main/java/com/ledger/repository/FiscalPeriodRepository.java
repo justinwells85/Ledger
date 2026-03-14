@@ -23,4 +23,6 @@ public interface FiscalPeriodRepository extends JpaRepository<FiscalPeriod, UUID
      * Spec: 03-fiscal-calendar.md Section 6
      */
     Optional<FiscalPeriod> findByCalendarMonth(LocalDate calendarMonth);
+
+    Optional<FiscalPeriod> findByPeriodKey(String periodKey);
 }
