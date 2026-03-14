@@ -15,6 +15,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+
 /**
  * T07 — Milestone + Version Entity
  * Spec: 01-domain-model.md Sections 2.5/2.6, 04-milestone-versioning.md
@@ -37,11 +39,19 @@ class MilestoneVersionRepositoryTest extends BaseIntegrationTest {
     @Autowired
     private MilestoneVersionRepository milestoneVersionRepository;
 
+    @Autowired
+    private JournalLineRepository journalLineRepository;
+
+    @Autowired
+    private JournalEntryRepository journalEntryRepository;
+
     private Milestone milestone;
     private FiscalPeriod period;
 
     @BeforeEach
     void setUp() {
+        journalLineRepository.deleteAll();
+        journalEntryRepository.deleteAll();
         milestoneVersionRepository.deleteAll();
         milestoneRepository.deleteAll();
         projectRepository.deleteAll();
