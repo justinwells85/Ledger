@@ -297,4 +297,17 @@ class MilestoneVersionAdjustmentTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$[1].versionNumber").value(2))
                 .andExpect(jsonPath("$[2].versionNumber").value(3));
     }
+
+    // TEST T44-1: GET /api/v1/milestones/{id}/versions response includes createdBy
+    // Spec: 13-api-design.md Section 5, T44 — version history enhancements
+    @Test
+    void getVersionHistory_responseIncludesCreatedBy() throws Exception {
+        milestoneService.createVersion(milestone.getMilestoneId(), new BigDecimal("20000.00"),
+                janPeriodId, LocalDate.of(2026, 2, 1), "scope cut", "alice");
+
+        mockMvc.perform(get("/api/v1/milestones/{id}/versions", milestone.getMilestoneId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].createdBy").value("system"))
+                .andExpect(jsonPath("$[1].createdBy").value("alice"));
+    }
 }

@@ -125,6 +125,30 @@ class ReconciliationStatusReportTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.rows[0].status").value("PARTIALLY_MATCHED"));
     }
 
+    // TEST T23-3: Open accrual count is accurate in each row
+    // Spec: 09-reporting.md Section 2.4
+    @Test
+    void reconciliationStatusReport_openAccrualCountIsAccurate() throws Exception {
+        // Create 2 accruals, 1 reversal → openAccrualCount = 1
+        UUID acc1 = commitActual("DOC1", "10000.00");
+        reconciliationService.createReconciliation(acc1, milestone.getMilestoneId(),
+                ReconciliationCategory.ACCRUAL, null, "system");
+
+        UUID acc2 = commitActual("DOC2", "5000.00");
+        reconciliationService.createReconciliation(acc2, milestone.getMilestoneId(),
+                ReconciliationCategory.ACCRUAL, null, "system");
+
+        UUID rev = commitActual("DOC3", "-10000.00");
+        reconciliationService.createReconciliation(rev, milestone.getMilestoneId(),
+                ReconciliationCategory.ACCRUAL_REVERSAL, null, "system");
+
+        mockMvc.perform(get("/api/v1/reports/reconciliation-status")
+                        .param("fiscalYear", "FY26"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rows", hasSize(1)))
+                .andExpect(jsonPath("$.rows[0].openAccrualCount").value(1));
+    }
+
     // TEST T23-2: Filter by status returns only matching milestones
     // Spec: 09-reporting.md Section 2.4
     @Test

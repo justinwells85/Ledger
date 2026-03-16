@@ -1,5 +1,6 @@
 package com.ledger.controller;
 
+import com.ledger.config.SecurityUtils;
 import com.ledger.dto.MilestoneCancelRequest;
 import com.ledger.dto.MilestoneCreateRequest;
 import com.ledger.dto.MilestoneResponse;
@@ -9,6 +10,7 @@ import com.ledger.entity.Milestone;
 import com.ledger.entity.MilestoneVersion;
 import com.ledger.repository.MilestoneVersionRepository;
 import com.ledger.service.MilestoneService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +60,7 @@ public class MilestoneController {
      */
     @PostMapping("/projects/{projectId}/milestones")
     public ResponseEntity<?> createMilestone(@PathVariable String projectId,
-                                              @RequestBody MilestoneCreateRequest request) {
+                                              @Valid @RequestBody MilestoneCreateRequest request) {
         try {
             Milestone milestone = milestoneService.createMilestone(
                     projectId,
@@ -68,7 +70,7 @@ public class MilestoneController {
                     request.fiscalPeriodId(),
                     request.effectiveDate(),
                     request.reason(),
-                    "system"
+                    SecurityUtils.currentUsername()
             );
 
             MilestoneVersion currentVersion = milestoneVersionRepository
@@ -97,7 +99,7 @@ public class MilestoneController {
                     request.fiscalPeriodId(),
                     request.effectiveDate(),
                     request.reason(),
-                    "system"
+                    SecurityUtils.currentUsername()
             );
             return ResponseEntity.status(HttpStatus.CREATED).body(MilestoneVersionResponse.from(version));
         } catch (IllegalArgumentException e) {
@@ -133,7 +135,7 @@ public class MilestoneController {
                     ? request.effectiveDate()
                     : java.time.LocalDate.now();
             MilestoneVersion cancelled = milestoneService.cancelMilestone(
-                    milestoneId, effectiveDate, request.reason(), "system");
+                    milestoneId, effectiveDate, request.reason(), SecurityUtils.currentUsername());
             return ResponseEntity.status(HttpStatus.CREATED).body(MilestoneVersionResponse.from(cancelled));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

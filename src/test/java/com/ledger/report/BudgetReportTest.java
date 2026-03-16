@@ -192,6 +192,36 @@ class BudgetReportTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.grandTotal").value(75000.00)); // 45000 + 30000
     }
 
+    // TEST T21-4: Budget report with quarterly grouping sums 3 months into one quarter key
+    // Spec: 09-reporting.md Section 2.1
+    @Test
+    void budgetReport_quarterlyGrouping_sumsThreeMonths() throws Exception {
+        // Add OCT, NOV, DEC milestones (all FY26 Q1)
+        UUID octPeriodId = fiscalPeriodRepository.findByPeriodKey("FY26-01-OCT").orElseThrow().getPeriodId();
+        UUID novPeriodId = fiscalPeriodRepository.findByPeriodKey("FY26-02-NOV").orElseThrow().getPeriodId();
+        UUID decPeriodId = fiscalPeriodRepository.findByPeriodKey("FY26-03-DEC").orElseThrow().getPeriodId();
+
+        milestoneService.createMilestone("PR13752", "October Sustainment",
+                null, new BigDecimal("10000.00"), octPeriodId,
+                LocalDate.of(2025, 9, 1), "Initial", "system");
+        milestoneService.createMilestone("PR13752", "November Sustainment",
+                null, new BigDecimal("12000.00"), novPeriodId,
+                LocalDate.of(2025, 9, 1), "Initial", "system");
+        milestoneService.createMilestone("PR13752", "December Sustainment",
+                null, new BigDecimal("8000.00"), decPeriodId,
+                LocalDate.of(2025, 9, 1), "Initial", "system");
+
+        // Request quarterly grouping
+        mockMvc.perform(get("/api/v1/reports/budget")
+                        .param("fiscalYear", "FY26")
+                        .param("groupBy", "quarter"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rows", hasSize(1)))
+                // Q1 (OCT+NOV+DEC) = 10000+12000+8000 = 30000; Q2 (JAN+FEB) = 25000+20000 = 45000
+                .andExpect(jsonPath("$.rows[0].periods['FY26-Q1']").value(30000.00))
+                .andExpect(jsonPath("$.rows[0].periods['FY26-Q2']").value(45000.00));
+    }
+
     // TEST T21-fiscal-year-filter: Milestones in other fiscal years excluded
     // Spec: 09-reporting.md Section 2.1
     @Test

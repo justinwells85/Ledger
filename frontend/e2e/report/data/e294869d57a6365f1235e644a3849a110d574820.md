@@ -1,0 +1,93 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - navigation [ref=e5]:
+    - generic [ref=e6] [cursor=pointer]: LEDGER
+    - generic [ref=e7]:
+      - link "Portfolio" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - link "Contracts" [ref=e9] [cursor=pointer]:
+        - /url: /contracts
+      - generic [ref=e10]: OPERATIONS
+      - link "Import" [ref=e11] [cursor=pointer]:
+        - /url: /import
+      - link "Reconciliation" [ref=e12] [cursor=pointer]:
+        - /url: /reconcile
+      - generic [ref=e13]: REPORTING
+      - link "Reports" [ref=e14] [cursor=pointer]:
+        - /url: /reports
+      - link "Journal" [ref=e15] [cursor=pointer]:
+        - /url: /journal
+      - generic [ref=e16]: ADMIN
+      - link "Settings" [ref=e17] [cursor=pointer]:
+        - /url: /settings
+      - link "Users" [ref=e18] [cursor=pointer]:
+        - /url: /admin/users
+      - link "Reference Data" [ref=e19] [cursor=pointer]:
+        - /url: /admin/reference-data
+      - link "Fiscal Years" [ref=e20] [cursor=pointer]:
+        - /url: /admin/fiscal-years
+      - link "Audit Log" [ref=e21] [cursor=pointer]:
+        - /url: /admin/audit
+    - generic [ref=e22]:
+      - generic [ref=e23]: TA
+      - generic [ref=e24]:
+        - generic [ref=e25]: Test Admin
+        - generic [ref=e26]: ADMIN
+      - button "Sign out" [ref=e27] [cursor=pointer]: ⇥
+  - generic [ref=e28]:
+    - banner [ref=e29]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: Time Machine
+        - textbox "Time Machine" [ref=e33] [cursor=pointer]
+    - main [ref=e34]:
+      - generic [ref=e35]:
+        - combobox [ref=e38]:
+          - option "All Statuses" [selected]
+          - option "FULLY RECONCILED"
+          - option "PARTIALLY MATCHED"
+          - option "OVER BUDGET"
+          - option "UNMATCHED"
+        - table [ref=e40]:
+          - rowgroup [ref=e41]:
+            - row "Contract Project Milestone Period Planned Invoice Accrual Net Total Actual Remaining Status Open Accruals" [ref=e42]:
+              - columnheader "Contract" [ref=e43]
+              - columnheader "Project" [ref=e44]
+              - columnheader "Milestone" [ref=e45]
+              - columnheader "Period" [ref=e46]
+              - columnheader "Planned" [ref=e47]
+              - columnheader "Invoice" [ref=e48]
+              - columnheader "Accrual Net" [ref=e49]
+              - columnheader "Total Actual" [ref=e50]
+              - columnheader "Remaining" [ref=e51]
+              - columnheader "Status" [ref=e52]
+              - columnheader "Open Accruals" [ref=e53]
+          - rowgroup [ref=e54]:
+            - row "Globant ADM DPI Photopass January Sustainment FY26-04-JAN $25,000 $15,000 $0 $15,000 $10,000 PARTIALLY MATCHED 0" [ref=e55]:
+              - cell "Globant ADM" [ref=e56]
+              - cell "DPI Photopass" [ref=e57]
+              - cell "January Sustainment" [ref=e58]
+              - cell "FY26-04-JAN" [ref=e59]
+              - cell "$25,000" [ref=e60]
+              - cell "$15,000" [ref=e61]
+              - cell "$0" [ref=e62]
+              - cell "$15,000" [ref=e63]
+              - cell "$10,000" [ref=e64]
+              - cell "PARTIALLY MATCHED" [ref=e65]:
+                - generic [ref=e66]: PARTIALLY MATCHED
+              - cell "0" [ref=e67]
+            - row "Globant ADM DPI Photopass Feb Sustainment FY26-05-FEB $20,000 $20,000 $0 $20,000 $0 FULLY RECONCILED 0" [ref=e68]:
+              - cell "Globant ADM" [ref=e69]
+              - cell "DPI Photopass" [ref=e70]
+              - cell "Feb Sustainment" [ref=e71]
+              - cell "FY26-05-FEB" [ref=e72]
+              - cell "$20,000" [ref=e73]
+              - cell "$20,000" [ref=e74]
+              - cell "$0" [ref=e75]
+              - cell "$20,000" [ref=e76]
+              - cell "$0" [ref=e77]
+              - cell "FULLY RECONCILED" [ref=e78]:
+                - generic [ref=e79]: FULLY RECONCILED
+              - cell "0" [ref=e80]
+```

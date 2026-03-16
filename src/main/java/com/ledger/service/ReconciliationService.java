@@ -12,8 +12,12 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Reconciliation lifecycle: create, undo, status derivation.
@@ -28,6 +32,7 @@ public class ReconciliationService {
     private final MilestoneRepository milestoneRepository;
     private final MilestoneVersionRepository milestoneVersionRepository;
     private final SystemConfigRepository systemConfigRepository;
+    private final ProjectRepository projectRepository;
     private final JournalService journalService;
 
     public ReconciliationService(ReconciliationRepository reconciliationRepository,
@@ -35,12 +40,14 @@ public class ReconciliationService {
                                   MilestoneRepository milestoneRepository,
                                   MilestoneVersionRepository milestoneVersionRepository,
                                   SystemConfigRepository systemConfigRepository,
+                                  ProjectRepository projectRepository,
                                   JournalService journalService) {
         this.reconciliationRepository = reconciliationRepository;
         this.actualLineRepository = actualLineRepository;
         this.milestoneRepository = milestoneRepository;
         this.milestoneVersionRepository = milestoneVersionRepository;
         this.systemConfigRepository = systemConfigRepository;
+        this.projectRepository = projectRepository;
         this.journalService = journalService;
     }
 
@@ -292,5 +299,48 @@ public class ReconciliationService {
             UUID milestoneId,
             int openAccrualCount,
             String accrualStatus
+    ) {}
+
+    /**
+     * Return ranked milestone candidates for reconciling the given actual.
+     * WBSE-matching milestones score higher than non-matching ones.
+     * Spec: 06-reconciliation.md Section 3.3
+     */
+    @Transactional(readOnly = true)
+    public List<MilestoneCandidate> getCandidates(UUID actualId) {
+        ActualLine actual = actualLineRepository.findById(actualId)
+                .orElseThrow(() -> new IllegalArgumentException("Actual not found: " + actualId));
+
+        List<Milestone> allMilestones = milestoneRepository.findAll();
+        List<Project> wbseProjects = actual.getWbse() != null
+                ? projectRepository.findByWbse(actual.getWbse())
+                : List.of();
+        List<String> matchingProjectIds = wbseProjects.stream()
+                .map(Project::getProjectId).toList();
+
+        Map<UUID, MilestoneVersion> versionByMilestone = milestoneVersionRepository.findAllCurrentVersions()
+                .stream().collect(Collectors.toMap(mv -> mv.getMilestone().getMilestoneId(), mv -> mv));
+
+        List<MilestoneCandidate> candidates = new ArrayList<>();
+        for (Milestone m : allMilestones) {
+            int score = matchingProjectIds.contains(m.getProject().getProjectId()) ? 10 : 0;
+            MilestoneVersion version = versionByMilestone.get(m.getMilestoneId());
+            BigDecimal planned = version != null ? version.getPlannedAmount() : BigDecimal.ZERO;
+            candidates.add(new MilestoneCandidate(
+                    m.getMilestoneId(), m.getName(),
+                    m.getProject().getProjectId(), planned, score));
+        }
+
+        candidates.sort(Comparator.comparingInt(MilestoneCandidate::relevanceScore).reversed());
+        return candidates;
+    }
+
+    /** A ranked milestone candidate for reconciliation. */
+    public record MilestoneCandidate(
+            UUID milestoneId,
+            String milestoneName,
+            String projectId,
+            BigDecimal plannedAmount,
+            int relevanceScore
     ) {}
 }

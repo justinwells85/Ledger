@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -17,6 +18,8 @@ import java.util.UUID;
  */
 @Repository
 public interface JournalLineRepository extends JpaRepository<JournalLine, UUID> {
+
+    List<JournalLine> findByJournalEntryEntryId(UUID entryId);
 
     /**
      * Get balance (SUM(debit) - SUM(credit)) for a given account type and milestone,

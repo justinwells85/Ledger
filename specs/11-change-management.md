@@ -108,3 +108,13 @@ The system should capture the current authenticated user for all audit records. 
 **Tier 1 implementation:** Simple user identification from the application session. No role-based access control. All users can perform all actions.
 
 **Future consideration:** Role-based permissions (e.g., only contract owners can adjust milestones for their contracts). Deferred to Tier 2+.
+
+> **Note (updated):** The current implementation hardcodes `created_by = "system"`. This is a known gap (see BR-83). When individual user accounts are implemented (T37), all mutations will populate `created_by` from the authenticated JWT principal. The audit trail structure is already correct — only the identity source needs to change.
+
+---
+
+## 7. Audit Log Viewer (Admin UI)
+
+The audit log viewer is accessible at `/admin/audit` to ADMIN users. It surfaces the existing audit API endpoints in a browsable, filterable, exportable UI.
+
+See `18-admin-configuration.md` Section 5 for the full viewer specification.

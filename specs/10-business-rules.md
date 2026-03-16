@@ -92,6 +92,52 @@
 
 ---
 
+## 9. Admin & Configuration Rules
+
+### User Management
+
+| ID | Rule | Enforcement |
+|----|------|-------------|
+| BR-80 | Every authenticated user has exactly one role (ADMIN, FINANCE_MANAGER, ANALYST, READ_ONLY) | Service/security layer |
+| BR-81 | Deactivated users cannot authenticate; their historical write records are preserved | Auth layer |
+| BR-82 | Only ADMIN role can manage user accounts, reference data, and system configuration | Security layer (@PreAuthorize) |
+| BR-83 | `created_by` on all mutations is populated from the authenticated user's username, not a hardcoded value | Service layer |
+| BR-84 | The last remaining active ADMIN account cannot be deactivated | Service validation |
+
+### Fiscal Year Management
+
+| ID | Rule | Enforcement |
+|----|------|-------------|
+| BR-85 | Fiscal year labels follow the format `FY##` (e.g., FY28) | Input validation |
+| BR-86 | A fiscal year spans exactly October 1 through September 30 of the following calendar year | Service logic |
+| BR-87 | Creating a fiscal year automatically generates all 12 fiscal periods with correct keys, quarters, and sort orders | Service logic |
+| BR-88 | Period keys follow the format `{FY}-{NN}-{MMM}` (e.g., FY28-01-OCT) | Service logic |
+| BR-89 | A fiscal year cannot be deleted if any milestones, actuals, or journal entries reference its periods | Service validation |
+| BR-90 | Fiscal years must be created in sequential order — no gaps allowed | Service validation |
+
+### Reference Data Management
+
+| ID | Rule | Enforcement |
+|----|------|-------------|
+| BR-91 | Reference data codes (funding sources, statuses, categories) must be unique, uppercase, and contain only alphanumeric characters and underscores | Input validation |
+| BR-92 | Deactivated reference values are hidden from new-entry dropdowns but preserved on all existing records | Service/query layer |
+| BR-93 | A reference value with active records referencing it cannot be deleted; it can only be deactivated | Service validation |
+| BR-94 | The ACTIVE contract status is system-reserved and cannot be deactivated | Service validation |
+| BR-95 | Contract status transitions are restricted: ACTIVE → CLOSED and ACTIVE → TERMINATED only | Service validation |
+| BR-96 | ACCRUAL and ACCRUAL_REVERSAL reconciliation categories are system-reserved and cannot be deactivated | Service validation |
+| BR-97 | A reconciliation category cannot be deleted if any reconciliation records reference it | Service validation |
+
+### System Configuration
+
+| ID | Rule | Enforcement |
+|----|------|-------------|
+| BR-98 | All system configuration changes require a documented reason (extends BR-31) | Controller validation |
+| BR-99 | Configuration values are validated against their declared data_type before saving | Service validation |
+| BR-100 | `accrual_aging_critical_days` must always be greater than `accrual_aging_warning_days` | Cross-field service validation |
+| BR-101 | New configuration keys can be added via admin UI without code changes | Data-driven Settings UI |
+
+---
+
 ## 8. Test Derivation Guide
 
 Each business rule maps to one or more test cases. Use this table to ensure coverage:

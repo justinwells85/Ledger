@@ -1,0 +1,92 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dropZone {
+  border: 2px dashed #aaa;
+  border-radius: 8px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: #fafafa;
+}
+
+.dropZone:hover, .dragOver {
+  border-color: #1a1a2e;
+  background: #f0f0f8;
+}
+
+.dropMain {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.25rem;
+}
+
+.dropSub {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.dropHint {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.error {
+  color: #c0392b;
+  font-size: 0.875rem;
+  padding: 0.5rem;
+  background: #fde8e8;
+  border-radius: 4px;
+}
+
+.sectionTitle {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #666;
+  margin-bottom: 0.75rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 2px solid #ddd;
+  font-size: 0.75rem;
+  color: #555;
+  background: #f8f8fc;
+}
+
+.table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.num { text-align: right; }
+
+.clickRow { cursor: pointer; }
+.clickRow:hover td { background: #f0f0f8; }
+
+.empty { text-align: center; color: #999; padding: 1rem; }
+
+.badge {
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.committed { background: #eafaf1; color: #27ae60; }
+.staged { background: #fff3cd; color: #e0a020; }
+.rejected { background: #fde8e8; color: #c0392b; }

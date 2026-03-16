@@ -1,0 +1,578 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 1400px;
+  height: 100%;
+}
+
+/* ─── Page header ──────────────────────────────────────────────────────────── */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+
+.pageTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-navy);
+  margin: 0;
+}
+
+.headerStats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.statChip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.statNum {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.statNeg { color: var(--color-negative); border-color: var(--color-negative-bg); }
+
+/* ─── Zone 1: Recently matched ────────────────────────────────────────────── */
+.matchedZone {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.zoneLabel {
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.matchedList {
+  display: flex;
+  flex-direction: column;
+}
+
+.matchedRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 8px var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+}
+
+.matchedRow:last-child { border-bottom: none; }
+
+.matchedPair {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.matchedDesc {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.matchedArrow {
+  color: var(--color-text-disabled);
+  flex-shrink: 0;
+}
+
+.matchedMilestone {
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.matchedAmount {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+}
+
+/* ─── Undo form (inline in matched row) ───────────────────────────────────── */
+.undoForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.undoInput {
+  padding: 6px 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.undoInput:focus {
+  outline: 2px solid var(--color-blue);
+  outline-offset: -2px;
+  border-color: transparent;
+}
+
+.undoActions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+/* ─── Bottom workspace ─────────────────────────────────────────────────────── */
+.workspace {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: var(--space-4);
+  flex: 1;
+  min-height: 0;
+}
+
+/* ─── Panel (shared by both columns) ──────────────────────────────────────── */
+.panel {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 400px;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.panelTitle {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.panelCount {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  background: var(--color-border);
+  border-radius: 10px;
+  padding: 1px 8px;
+}
+
+/* ─── Filter bar ───────────────────────────────────────────────────────────── */
+.filterBar {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.filterInput {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  min-width: 0;
+  color: var(--color-text-primary);
+}
+
+.filterInput:focus {
+  outline: 2px solid var(--color-blue);
+  outline-offset: -2px;
+  border-color: transparent;
+}
+
+.filterSelect {
+  padding: 6px 8px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+  background: var(--color-white);
+  flex-shrink: 0;
+}
+
+/* ─── Actuals list ─────────────────────────────────────────────────────────── */
+.actualsList {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.actualRow {
+  padding: 10px var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background 0.1s;
+  border-left: 3px solid transparent;
+}
+
+.actualRow:hover { background: var(--color-surface); }
+.actualRow:last-child { border-bottom: none; }
+
+.actualRowSelected {
+  background: var(--color-blue-subtle);
+  border-left-color: var(--color-blue);
+}
+
+.actualTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.actualVendor {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.actualAmount {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.actualBottom {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 2px;
+}
+
+.actualDate {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-disabled);
+}
+
+.actualDesc {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Right panel states ───────────────────────────────────────────────────── */
+.emptyRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  color: var(--color-text-disabled);
+}
+
+.emptyRightIcon {
+  font-size: 28px;
+}
+
+.emptyRightText {
+  font-size: var(--font-size-sm);
+  text-align: center;
+  max-width: 200px;
+}
+
+.rightContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ─── Context strip (selected actual) ─────────────────────────────────────── */
+.contextStrip {
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-blue-subtle);
+  border-bottom: 1px solid var(--color-blue);
+  flex-shrink: 0;
+}
+
+.contextRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.contextVendor {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-navy);
+}
+
+.contextAmount {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.contextMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* ─── Candidate list ───────────────────────────────────────────────────────── */
+.candidateList {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.candidateCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  background: var(--color-white);
+  transition: border-color 0.1s, background 0.1s;
+  border-left: 3px solid transparent;
+}
+
+.candidateCard:hover {
+  border-color: var(--color-navy);
+  background: var(--color-surface);
+}
+
+.candidateSelected {
+  border-color: var(--color-blue) !important;
+  background: var(--color-blue-subtle);
+  border-left-color: var(--color-blue) !important;
+}
+
+.candidateScore {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-warning);
+  min-width: 24px;
+  text-align: center;
+}
+
+.candidateBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.candidateName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.candidateMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* ─── Assignment form ──────────────────────────────────────────────────────── */
+.assignForm {
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.assignTarget {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.categoryChips {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.categoryChip {
+  padding: 4px 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  cursor: pointer;
+  background: var(--color-white);
+  color: var(--color-text-secondary);
+  transition: all 0.1s;
+}
+
+.categoryChip:hover { border-color: var(--color-navy); color: var(--color-navy); }
+
+.categoryChipActive {
+  background: var(--color-navy);
+  border-color: var(--color-navy);
+  color: var(--color-text-inverse);
+}
+
+.notes {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  resize: vertical;
+  box-sizing: border-box;
+  color: var(--color-text-primary);
+}
+
+.notes:focus {
+  outline: 2px solid var(--color-blue);
+  outline-offset: -2px;
+  border-color: transparent;
+}
+
+.assignActions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+/* ─── Shared states ────────────────────────────────────────────────────────── */
+.neg { color: var(--color-negative); }
+
+.hint {
+  padding: var(--space-5);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-disabled);
+  text-align: center;
+}
+
+.empty {
+  padding: var(--space-8) var(--space-5);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-disabled);
+  text-align: center;
+}
+
+.errorText {
+  color: var(--color-negative);
+  font-size: var(--font-size-xs);
+}
+
+/* ─── Buttons ──────────────────────────────────────────────────────────────── */
+.btnPrimary {
+  padding: 7px 16px;
+  background: var(--color-navy);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: opacity 0.1s;
+  white-space: nowrap;
+}
+
+.btnPrimary:hover { opacity: 0.85; }
+.btnPrimary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btnGhost {
+  padding: 7px 14px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.1s;
+  white-space: nowrap;
+}
+
+.btnGhost:hover { background: var(--color-surface); }
+
+.btnDanger {
+  padding: 7px 14px;
+  background: var(--color-negative);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.1s;
+}
+
+.btnDanger:hover { opacity: 0.85; }
+.btnDanger:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btnUndo {
+  padding: 3px 10px;
+  background: transparent;
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.1s;
+}
+
+.btnUndo:hover { background: var(--color-warning-bg); }

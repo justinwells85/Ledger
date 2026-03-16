@@ -2,13 +2,16 @@ package com.ledger.controller;
 
 import com.ledger.dto.ProjectCreateRequest;
 import com.ledger.dto.ProjectResponse;
+import com.ledger.dto.ProjectUpdateRequest;
 import com.ledger.entity.FundingSource;
 import com.ledger.service.DuplicateProjectIdException;
 import com.ledger.service.ProjectService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,7 +56,7 @@ public class ProjectController {
     @PostMapping("/api/v1/contracts/{contractId}/projects")
     public ResponseEntity<ProjectResponse> createProject(
             @PathVariable UUID contractId,
-            @RequestBody ProjectCreateRequest request) {
+            @Valid @RequestBody ProjectCreateRequest request) {
         var project = projectService.createProject(contractId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ProjectResponse.from(project));
     }
@@ -65,6 +68,18 @@ public class ProjectController {
     @GetMapping("/api/v1/projects/{projectId}")
     public ProjectResponse getProject(@PathVariable String projectId) {
         return ProjectResponse.from(projectService.getProject(projectId));
+    }
+
+    /**
+     * PATCH /api/v1/projects/{projectId}
+     * Update project metadata. Requires reason for audit.
+     * Spec: 11-change-management.md Section 2.2
+     */
+    @PatchMapping("/api/v1/projects/{projectId}")
+    public ProjectResponse updateProject(
+            @PathVariable String projectId,
+            @RequestBody ProjectUpdateRequest request) {
+        return ProjectResponse.from(projectService.updateProject(projectId, request));
     }
 
     @ExceptionHandler(DuplicateProjectIdException.class)

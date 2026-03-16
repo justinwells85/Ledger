@@ -98,7 +98,7 @@ public class ReportController {
             @RequestParam(required = false) LocalDate asOfDate) {
         try {
             ReportService.BudgetReport report = reportService.getBudgetReport(
-                    contractId, projectId, fiscalYear, fundingSource, asOfDate);
+                    contractId, projectId, fiscalYear, fundingSource, groupBy, asOfDate);
             return ResponseEntity.ok(report);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

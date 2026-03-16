@@ -10,8 +10,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Service for milestone lifecycle operations.
@@ -267,12 +269,19 @@ public class MilestoneService {
             throw new IllegalArgumentException(
                     "Time machine date cannot be in the future (BR-53): " + asOfDate);
         }
-        return milestoneRepository.findByProjectProjectId(projectId).stream()
+        List<Milestone> milestones = milestoneRepository.findByProjectProjectId(projectId);
+
+        // Fetch all current versions in one query to avoid N+1
+        List<MilestoneVersion> allVersions = (asOfDate != null)
+                ? milestoneVersionRepository.findAllCurrentVersionsAsOf(asOfDate)
+                : milestoneVersionRepository.findAllCurrentVersions();
+        Map<UUID, MilestoneVersion> versionMap = allVersions.stream()
+                .collect(Collectors.toMap(mv -> mv.getMilestone().getMilestoneId(), mv -> mv));
+
+        return milestones.stream()
                 .map(m -> {
-                    Optional<MilestoneVersion> version = (asOfDate != null)
-                            ? milestoneVersionRepository.findVersionAsOfDate(m.getMilestoneId(), asOfDate)
-                            : milestoneVersionRepository.findCurrentVersion(m.getMilestoneId());
-                    return version.map(v -> new MilestoneAsOf(m, v)).orElse(null);
+                    MilestoneVersion version = versionMap.get(m.getMilestoneId());
+                    return version != null ? new MilestoneAsOf(m, version) : null;
                 })
                 .filter(mao -> mao != null)
                 .toList();

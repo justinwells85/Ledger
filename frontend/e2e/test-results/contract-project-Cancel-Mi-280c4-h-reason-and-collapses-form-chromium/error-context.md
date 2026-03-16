@@ -1,0 +1,135 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - navigation [ref=e5]:
+    - generic [ref=e6] [cursor=pointer]: LEDGER
+    - generic [ref=e7]:
+      - link "Portfolio" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - link "Contracts" [ref=e9] [cursor=pointer]:
+        - /url: /contracts
+      - generic [ref=e10]: OPERATIONS
+      - link "Import" [ref=e11] [cursor=pointer]:
+        - /url: /import
+      - link "Reconciliation" [ref=e12] [cursor=pointer]:
+        - /url: /reconcile
+      - generic [ref=e13]: REPORTING
+      - link "Reports" [ref=e14] [cursor=pointer]:
+        - /url: /reports
+      - link "Journal" [ref=e15] [cursor=pointer]:
+        - /url: /journal
+      - generic [ref=e16]: ADMIN
+      - link "Settings" [ref=e17] [cursor=pointer]:
+        - /url: /settings
+      - link "Users" [ref=e18] [cursor=pointer]:
+        - /url: /admin/users
+      - link "Reference Data" [ref=e19] [cursor=pointer]:
+        - /url: /admin/reference-data
+      - link "Fiscal Years" [ref=e20] [cursor=pointer]:
+        - /url: /admin/fiscal-years
+      - link "Audit Log" [ref=e21] [cursor=pointer]:
+        - /url: /admin/audit
+    - generic [ref=e22]:
+      - generic [ref=e23]: TA
+      - generic [ref=e24]:
+        - generic [ref=e25]: Test Admin
+        - generic [ref=e26]: ADMIN
+      - button "Sign out" [ref=e27] [cursor=pointer]: ⇥
+  - generic [ref=e28]:
+    - banner [ref=e29]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: Time Machine
+        - textbox "Time Machine" [ref=e33] [cursor=pointer]
+    - main [ref=e34]:
+      - generic [ref=e35]:
+        - navigation [ref=e36]:
+          - generic [ref=e37] [cursor=pointer]: Portfolio
+          - generic [ref=e38]: /
+          - generic [ref=e39] [cursor=pointer]: Globant ADM
+          - generic [ref=e40]: /
+          - generic [ref=e41]: DPI Photopass
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - generic [ref=e44]:
+              - generic [ref=e45]: PR13752
+              - heading "DPI Photopass" [level=2] [ref=e46]
+              - generic [ref=e47]: ACTIVE
+            - generic [ref=e48]:
+              - generic [ref=e49]:
+                - text: "WBSE:"
+                - strong [ref=e50]: 1174905.SU.ES
+              - generic [ref=e51]: ·
+              - generic [ref=e52]:
+                - text: "Funding:"
+                - strong [ref=e53]: OPEX
+          - button "Audit Trail" [ref=e55] [cursor=pointer]
+        - generic [ref=e56]:
+          - generic [ref=e57]:
+            - heading "CASHFLOW" [level=3] [ref=e58]
+            - button "+ Add Milestone" [ref=e59] [cursor=pointer]
+          - table [ref=e61]:
+            - rowgroup [ref=e62]:
+              - row "Milestone Jan Feb Total" [ref=e63]:
+                - columnheader "Milestone" [ref=e64]
+                - columnheader "Jan" [ref=e65]
+                - columnheader "Feb" [ref=e66]
+                - columnheader "Total" [ref=e67]
+            - rowgroup [ref=e68]:
+              - row "January Sustainment $25,000 $15,000 $10,000 — $25,000" [ref=e69]:
+                - cell "January Sustainment" [ref=e70]: January Sustainment
+                - cell "$25,000 $15,000 $10,000" [ref=e72] [cursor=pointer]:
+                  - generic [ref=e73]: $25,000
+                  - generic [ref=e74]: $15,000
+                  - generic [ref=e75]: $10,000
+                - cell "—" [ref=e76]
+                - cell "$25,000" [ref=e77]
+            - rowgroup [ref=e78]:
+              - row "Total $25,000 — $25,000" [ref=e79]:
+                - cell "Total" [ref=e80]
+                - cell "$25,000" [ref=e81]
+                - cell "—" [ref=e82]
+                - cell "$25,000" [ref=e83]
+        - generic [ref=e86]:
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - generic [ref=e90]: January Sustainment
+              - generic [ref=e91]: FY26-04-JAN
+            - button "Close" [ref=e92] [cursor=pointer]: ✕
+          - generic [ref=e95]:
+            - generic [ref=e96]:
+              - generic [ref=e97]: RECONCILIATION
+              - generic [ref=e98]:
+                - generic [ref=e99]:
+                  - generic [ref=e100]: Planned
+                  - generic [ref=e101]: $25,000
+                - generic [ref=e102]:
+                  - generic [ref=e103]: Invoiced
+                  - generic [ref=e104]: $15,000
+                - generic [ref=e105]:
+                  - generic [ref=e106]: Accrual net
+                  - generic [ref=e107]: $0
+                - generic [ref=e108]:
+                  - generic [ref=e109]: Remaining
+                  - generic [ref=e110]: $10,000
+              - generic [ref=e112]: PARTIALLY MATCHED
+              - generic [ref=e113]:
+                - button "Close" [active] [ref=e114] [cursor=pointer]
+                - generic [ref=e115]:
+                  - generic [ref=e116]:
+                    - generic [ref=e117]: Effective Date*
+                    - textbox [ref=e118]: 2026-03-16
+                  - generic [ref=e119]:
+                    - generic [ref=e120]: Reason*
+                    - textbox [ref=e121]
+                  - button "Confirm Cancel" [ref=e122] [cursor=pointer]
+            - generic [ref=e123]:
+              - generic [ref=e124]:
+                - generic [ref=e125]: VERSION HISTORY
+                - button "+ New Version" [ref=e126] [cursor=pointer]
+              - generic [ref=e128]:
+                - generic [ref=e129]: v1
+                - generic [ref=e130]: $25,000
+                - generic [ref=e131]: 2025-11-01
+                - generic [ref=e132]: Initial
+```

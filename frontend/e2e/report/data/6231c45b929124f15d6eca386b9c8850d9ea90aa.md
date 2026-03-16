@@ -1,0 +1,75 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - navigation [ref=e5]:
+    - generic [ref=e6] [cursor=pointer]: LEDGER
+    - generic [ref=e7]:
+      - link "Portfolio" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - link "Contracts" [ref=e9] [cursor=pointer]:
+        - /url: /contracts
+      - generic [ref=e10]: OPERATIONS
+      - link "Import" [ref=e11] [cursor=pointer]:
+        - /url: /import
+      - link "Reconciliation" [ref=e12] [cursor=pointer]:
+        - /url: /reconcile
+      - generic [ref=e13]: REPORTING
+      - link "Reports" [ref=e14] [cursor=pointer]:
+        - /url: /reports
+      - link "Journal" [ref=e15] [cursor=pointer]:
+        - /url: /journal
+      - generic [ref=e16]: ADMIN
+      - link "Settings" [ref=e17] [cursor=pointer]:
+        - /url: /settings
+      - link "Users" [ref=e18] [cursor=pointer]:
+        - /url: /admin/users
+      - link "Reference Data" [ref=e19] [cursor=pointer]:
+        - /url: /admin/reference-data
+      - link "Fiscal Years" [ref=e20] [cursor=pointer]:
+        - /url: /admin/fiscal-years
+      - link "Audit Log" [ref=e21] [cursor=pointer]:
+        - /url: /admin/audit
+    - generic [ref=e22]:
+      - generic [ref=e23]: TA
+      - generic [ref=e24]:
+        - generic [ref=e25]: Test Admin
+        - generic [ref=e26]: ADMIN
+      - button "Sign out" [ref=e27] [cursor=pointer]: ⇥
+  - generic [ref=e28]:
+    - banner [ref=e29]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: Time Machine
+        - textbox "Time Machine" [ref=e33] [cursor=pointer]
+    - main [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e37]:
+          - combobox [ref=e38]:
+            - option "By Month" [selected]
+            - option "By Quarter"
+          - textbox "Filter by contract or project…" [ref=e39]
+          - button "Export CSV" [ref=e40] [cursor=pointer]
+        - table [ref=e42]:
+          - rowgroup [ref=e43]:
+            - row "Contract / Project Funding FY26-04-JAN FY26-05-FEB Total" [ref=e44]:
+              - columnheader "Contract / Project" [ref=e45]
+              - columnheader "Funding" [ref=e46]
+              - columnheader "FY26-04-JAN" [ref=e47]
+              - columnheader "FY26-05-FEB" [ref=e48]
+              - columnheader "Total" [ref=e49]
+          - rowgroup [ref=e50]:
+            - row "Globant ADM PR13752 DPI Photopass OPEX $25,000 $20,000 $45,000" [ref=e51]:
+              - cell "Globant ADM PR13752 DPI Photopass" [ref=e52]:
+                - generic [ref=e53]: Globant ADM
+                - generic [ref=e54]: PR13752 DPI Photopass
+              - cell "OPEX" [ref=e55]
+              - cell "$25,000" [ref=e56]
+              - cell "$20,000" [ref=e57]
+              - cell "$45,000" [ref=e58]
+            - row "GRAND TOTAL $25,000 $20,000 $45,000" [ref=e59]:
+              - cell "GRAND TOTAL" [ref=e60]:
+                - strong [ref=e61]: GRAND TOTAL
+              - cell "$25,000" [ref=e62]
+              - cell "$20,000" [ref=e63]
+              - cell "$45,000" [ref=e64]
+```

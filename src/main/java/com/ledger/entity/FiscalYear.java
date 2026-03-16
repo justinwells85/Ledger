@@ -1,10 +1,12 @@
 package com.ledger.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 import java.time.Instant;
@@ -33,11 +35,17 @@ public class FiscalYear {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "fiscalYear")
     @OrderBy("sortOrder ASC")
     private List<FiscalPeriod> periods = new ArrayList<>();
 
-    protected FiscalYear() {
+    public FiscalYear() {
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) createdAt = Instant.now();
     }
 
     public String getFiscalYear() {

@@ -1,0 +1,218 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 1200px;
+}
+
+.page h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-navy);
+  margin: 0 0 var(--space-5) 0;
+}
+
+/* ─── Tab bar (underline style matching hub) ───────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-5);
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.1s, border-color 0.1s;
+}
+
+.tab:hover { color: var(--color-navy); }
+
+.tabActive {
+  color: var(--color-blue);
+  border-bottom-color: var(--color-blue);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ─── Tab content ──────────────────────────────────────────────────────────── */
+.tabContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btnAdd {
+  padding: 7px 16px;
+  background: var(--color-navy);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: opacity 0.1s;
+}
+
+.btnAdd:hover { opacity: 0.85; }
+
+/* ─── Inline form ──────────────────────────────────────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  max-width: 440px;
+}
+
+.input {
+  padding: 7px 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+  background: var(--color-white);
+}
+
+.input:focus {
+  outline: 2px solid var(--color-blue);
+  outline-offset: -2px;
+  border-color: transparent;
+}
+
+.error {
+  color: var(--color-negative);
+  font-size: var(--font-size-sm);
+}
+
+.formActions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+.btnCancel {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.btnCancel:hover { background: var(--color-border); }
+
+.btnCreate {
+  padding: 6px 14px;
+  background: var(--color-navy);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: opacity 0.1s;
+}
+
+.btnCreate:hover { opacity: 0.85; }
+.btnCreate:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ─── Table ────────────────────────────────────────────────────────────────── */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-white);
+  box-shadow: var(--shadow-card);
+}
+
+.table th {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:hover td { background: var(--color-surface); }
+
+.inactiveRow td { color: var(--color-text-disabled); }
+
+.mono {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+/* ─── Action buttons ───────────────────────────────────────────────────────── */
+.btnDeactivate {
+  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid var(--color-negative);
+  color: var(--color-negative);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.btnDeactivate:hover { background: var(--color-negative-bg); }
+
+.btnReactivate {
+  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid var(--color-positive);
+  color: var(--color-positive);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.btnReactivate:hover { background: #eaf8e8; }
+
+.empty {
+  text-align: center;
+  color: var(--color-text-disabled);
+  padding: var(--space-8);
+  font-size: var(--font-size-sm);
+}

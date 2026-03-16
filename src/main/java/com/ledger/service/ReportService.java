@@ -1,6 +1,7 @@
 package com.ledger.service;
 
 import com.ledger.entity.*;
+import com.ledger.entity.FiscalPeriod;
 import com.ledger.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,11 +51,20 @@ public class ReportService {
                                         String fiscalYear,
                                         String fundingSource,
                                         LocalDate asOfDate) {
+        return getBudgetReport(contractId, projectId, fiscalYear, fundingSource, null, asOfDate);
+    }
+
+    public BudgetReport getBudgetReport(UUID contractId,
+                                        String projectId,
+                                        String fiscalYear,
+                                        String fundingSource,
+                                        String groupBy,
+                                        LocalDate asOfDate) {
         if (fiscalYear == null || fiscalYear.isBlank()) {
             throw new IllegalArgumentException("fiscalYear is required");
         }
 
-        // BR-53: future asOfDate rejected (delegated to MilestoneService)
+        boolean quarterlyGrouping = "quarter".equalsIgnoreCase(groupBy);
 
         // 1. Resolve projects matching the filters
         List<Project> projects = resolveProjects(contractId, projectId, fundingSource);
@@ -70,15 +80,21 @@ public class ReportService {
 
             for (MilestoneService.MilestoneAsOf mao : milestones) {
                 MilestoneVersion version = mao.version();
-                String periodKey = version.getFiscalPeriod().getPeriodKey();
+                FiscalPeriod fp = version.getFiscalPeriod();
+                String periodKey = fp.getPeriodKey();
 
                 // Only include milestones whose fiscal period belongs to the requested fiscal year
                 if (!periodKey.startsWith(fiscalYear + "-")) {
                     continue;
                 }
 
+                // Use quarter key (e.g. "FY26-Q1") or full period key based on groupBy
+                String key = quarterlyGrouping
+                        ? fiscalYear + "-" + fp.getQuarter()
+                        : periodKey;
+
                 BigDecimal amount = version.getPlannedAmount();
-                periods.merge(periodKey, amount, BigDecimal::add);
+                periods.merge(key, amount, BigDecimal::add);
                 projectTotal = projectTotal.add(amount);
             }
 
@@ -210,6 +226,8 @@ public class ReportService {
                 }
 
                 BigDecimal totalActual = rs.invoiceTotal().add(rs.accrualNet());
+                int openAccrualCount = reconciliationService.getAccrualStatus(
+                        mao.milestone().getMilestoneId()).openAccrualCount();
 
                 rows.add(new ReconciliationStatusReportRow(
                         project.getContract().getName(),
@@ -221,7 +239,8 @@ public class ReportService {
                         rs.accrualNet(),
                         totalActual,
                         rs.remaining(),
-                        rs.status()
+                        rs.status(),
+                        openAccrualCount
                 ));
             }
         }
@@ -367,7 +386,8 @@ public class ReportService {
             BigDecimal accrualNet,
             BigDecimal totalActual,
             BigDecimal remaining,
-            String status
+            String status,
+            int openAccrualCount
     ) {}
 
     /** Open accruals report response. */

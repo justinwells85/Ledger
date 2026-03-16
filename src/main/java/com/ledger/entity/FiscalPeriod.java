@@ -2,6 +2,8 @@ package com.ledger.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,6 +23,7 @@ import java.util.UUID;
 public class FiscalPeriod {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "period_id")
     private UUID periodId;
 
@@ -46,7 +49,7 @@ public class FiscalPeriod {
     @Column(name = "sort_order", nullable = false)
     private int sortOrder;
 
-    protected FiscalPeriod() {
+    public FiscalPeriod() {
     }
 
     public UUID getPeriodId() {

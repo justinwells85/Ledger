@@ -1,0 +1,57 @@
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.sm {
+  padding: 1px 6px;
+  font-size: 10px;
+}
+
+/* Variants */
+.active {
+  background: var(--color-navy);
+  color: var(--color-text-inverse);
+}
+
+.closed {
+  background: var(--color-neutral-bg);
+  color: var(--color-text-secondary);
+}
+
+.draft {
+  background: transparent;
+  border: 1px solid var(--color-blue);
+  color: var(--color-blue);
+}
+
+.committed {
+  background: var(--color-positive-bg);
+  color: var(--color-positive);
+}
+
+.staged {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.rejected {
+  background: var(--color-negative-bg);
+  color: var(--color-negative);
+}
+
+.over {
+  background: var(--color-negative-bg);
+  color: var(--color-negative);
+}
+
+.ok {
+  background: var(--color-positive-bg);
+  color: var(--color-positive);
+}

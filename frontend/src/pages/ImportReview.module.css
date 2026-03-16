@@ -1,0 +1,117 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.breadcrumb {
+  font-size: 0.8rem;
+  color: #888;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.breadLink { cursor: pointer; color: #1a1a2e; text-decoration: underline; }
+.sep { color: #bbb; }
+
+.meta { font-size: 0.875rem; color: #555; }
+
+.summaryRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.summaryCard {
+  background: #f4f4f8;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+}
+
+.sumLbl { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; color: #666; margin-bottom: 0.25rem; }
+.sumVal { font-size: 1.5rem; font-weight: 700; color: #1a1a2e; }
+.new { color: #27ae60; }
+.error { color: #c0392b; }
+
+.filterRow { display: flex; gap: 0.5rem; }
+
+.filterBtn {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.filterActive {
+  background: #1a1a2e;
+  color: #fff;
+  border-color: #1a1a2e;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 2px solid #ddd;
+  font-size: 0.75rem;
+  color: #555;
+  background: #f8f8fc;
+}
+
+.table td {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.num { text-align: right; }
+.neg { color: #c0392b; }
+.desc { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.dupRow td { color: #aaa; }
+
+.dupBadge { padding: 0.15rem 0.4rem; background: #f0f0f0; color: #888; border-radius: 3px; font-size: 0.7rem; font-weight: 600; }
+.newBadge { padding: 0.15rem 0.4rem; background: #eafaf1; color: #27ae60; border-radius: 3px; font-size: 0.7rem; font-weight: 600; }
+
+.empty { text-align: center; color: #999; padding: 1rem; }
+
+.actionBar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-top: 1px solid #eee;
+}
+
+.actionError { color: #c0392b; font-size: 0.8rem; margin-right: auto; }
+
+.btnReject {
+  padding: 0.5rem 1.25rem;
+  background: #fff;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btnCommit {
+  padding: 0.5rem 1.25rem;
+  background: #27ae60;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btnCommit:disabled, .btnReject:disabled { opacity: 0.6; cursor: not-allowed; }

@@ -1,0 +1,8 @@
+# Development override: only postgres runs in Docker.
+# Backend and frontend run natively for fast hot-reload.
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up postgres
+services:
+  backend:
+    profiles: ["disabled"]
+  frontend:
+    profiles: ["disabled"]

@@ -743,9 +743,94 @@ STEP 7: Audit
 |-------|-------|----------------|
 | Unit tests | ~45 | Business logic, validation, computation |
 | Integration tests | ~60 | Service + DB, data integrity, queries |
-| E2E / Acceptance tests | ~13 scenarios (~50 assertions) | Complete workflows, cross-service |
-| Frontend tests | ~40 | Component rendering, interaction, API integration |
-| **Total** | **~158 tests + ~50 E2E assertions** | |
+| E2E / Acceptance tests (Java) | ~13 scenarios (~50 assertions) | Complete workflows, cross-service |
+| Playwright Tier 1 (mocked) | ~134 tests | UI structure, form interactions, navigation, visual state |
+| Playwright Tier 2 (real backend) | 🔲 To be implemented | Data persistence visible across all UI locations |
+| Frontend component tests | ~40 | Component rendering, interaction, API integration |
+| **Total** | **~158 + 134 + 40 tests** | |
+
+---
+
+## 10. Playwright UI Testing Strategy
+
+> Detailed persona-scenario matrix with per-scenario action steps, UI validations, and test file locations lives in **`20-e2e-scenario-matrix.md`**. This section defines the two-tier structure and how it integrates with the overall test plan.
+
+### 10.1 Two-Tier Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Tier 1: Playwright + Mocked APIs                                 │
+│  Location: frontend/e2e/*.spec.ts                                 │
+│  Speed: < 2 minutes                                               │
+│  Run on: Every PR / every local test run                          │
+│  Validates: UI structure, form interactions, navigation, visual   │
+│             state changes after mutations (stateful mocks)        │
+│  Limitation: Cannot catch backend persistence bugs               │
+├──────────────────────────────────────────────────────────────────┤
+│  Tier 2: Playwright + Real Docker Backend                         │
+│  Location: frontend/e2e/tier2/*.spec.ts                           │
+│  Speed: 5–15 minutes                                              │
+│  Run on: Merge to main, nightly                                   │
+│  Validates: Data written in UI actually persists and appears in   │
+│             ALL displayed locations (full round-trip)             │
+│  Requires: docker compose up with clean test database             │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 10.2 Tier 1 Requirements
+
+**Stateful mocks for write operations:** After a POST/PUT mutation, the mock for the subsequent GET must return updated data. This is the primary mechanism for validating post-action state in Tier 1.
+
+```typescript
+// Example: stateful mock pattern (required for all write-flow tests)
+let posted = false;
+await page.route('**/api/v1/contracts/*/projects', r => {
+  if (r.request().method() === 'POST') {
+    posted = true;
+    return r.fulfill({ status: 201, ... });
+  }
+  return r.fulfill({ status: 200, body: JSON.stringify(posted ? updatedList : originalList) });
+});
+// Then assert the new item is visible:
+await expect(page.getByText('New Project Name')).toBeVisible();
+```
+
+**Assertion completeness:** Every write-flow test must assert the post-action state, not just that the form closed. The test is not complete until it verifies the new/updated data is visible in the UI.
+
+### 10.3 Tier 2 Requirements
+
+**Infrastructure:**
+- Docker Compose stack must be running: `docker compose up`
+- Database seeded to a known state before each test run
+- Playwright `baseURL`: `http://localhost:80`
+- Auth: login via real `POST /api/v1/auth/login` (not `addInitScript`)
+- Test isolation: use unique name prefixes per test run (e.g. timestamp prefix) to avoid conflicts
+
+**Run commands:**
+```bash
+npm run test:e2e         # Tier 1 only (default)
+npm run test:e2e:tier2   # Tier 2 only (requires Docker)
+npm run test:e2e:all     # Both tiers
+```
+
+**Validation pattern:** Each Tier 2 scenario navigates to ALL pages where the created/modified data should appear. For example, creating a contract must be verified on:
+1. The contract detail page (navigated to immediately after creation)
+2. The dashboard CONTRACT SUMMARY table (navigate back to `/`)
+
+### 10.4 Known Test Coverage Gaps (Tier 2)
+
+All Tier 2 tests are currently `🔲 Not yet implemented`. See the coverage matrix in `20-e2e-scenario-matrix.md` Section 6 for the full list.
+
+Priority order for Tier 2 implementation (highest risk of mock-hidden bugs):
+1. P1-S1 Create contract → appears on dashboard (blocked by dashboard bug fix)
+2. P1-S2 Add project → appears on fresh contract detail reload
+3. P1-S3 Create milestone → appears on fresh project detail reload
+4. P2-S4 Commit import → actual lines appear in reconciliation workspace
+5. P3-S3 Reconcile actual → actual removed from unreconciled list after fresh load
+
+### 10.5 Relationship to Java E2E Tests
+
+The Java E2E tests (Section 5, E2E-01 through E2E-13) test at the API level — they validate that the correct data is returned from HTTP endpoints, without a browser. The Playwright Tier 2 tests complement this by validating the full browser-to-database round-trip: that data entered via the UI appears correctly in the DOM after page reloads.
 
 ---
 

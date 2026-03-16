@@ -1,0 +1,63 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - navigation [ref=e5]:
+    - generic [ref=e6] [cursor=pointer]: LEDGER
+    - generic [ref=e7]:
+      - link "Portfolio" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - link "Contracts" [ref=e9] [cursor=pointer]:
+        - /url: /contracts
+      - generic [ref=e10]: OPERATIONS
+      - link "Import" [ref=e11] [cursor=pointer]:
+        - /url: /import
+      - link "Reconciliation" [ref=e12] [cursor=pointer]:
+        - /url: /reconcile
+      - generic [ref=e13]: REPORTING
+      - link "Reports" [ref=e14] [cursor=pointer]:
+        - /url: /reports
+      - link "Journal" [ref=e15] [cursor=pointer]:
+        - /url: /journal
+      - generic [ref=e16]: ADMIN
+      - link "Settings" [ref=e17] [cursor=pointer]:
+        - /url: /settings
+      - link "Users" [ref=e18] [cursor=pointer]:
+        - /url: /admin/users
+      - link "Reference Data" [ref=e19] [cursor=pointer]:
+        - /url: /admin/reference-data
+      - link "Fiscal Years" [ref=e20] [cursor=pointer]:
+        - /url: /admin/fiscal-years
+      - link "Audit Log" [ref=e21] [cursor=pointer]:
+        - /url: /admin/audit
+    - generic [ref=e22]:
+      - generic [ref=e23]: TA
+      - generic [ref=e24]:
+        - generic [ref=e25]: Test Admin
+        - generic [ref=e26]: ADMIN
+      - button "Sign out" [ref=e27] [cursor=pointer]: ⇥
+  - generic [ref=e28]:
+    - banner [ref=e29]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: Time Machine
+        - textbox "Time Machine" [ref=e33] [cursor=pointer]
+    - main [ref=e34]:
+      - generic [ref=e35]:
+        - button "Export CSV" [ref=e38] [cursor=pointer]
+        - table [ref=e40]:
+          - rowgroup [ref=e41]:
+            - row "Funding Source Total Planned % of Total" [ref=e42]:
+              - columnheader "Funding Source" [ref=e43]
+              - columnheader "Total Planned" [ref=e44]
+              - columnheader "% of Total" [ref=e45]
+          - rowgroup [ref=e46]:
+            - row "OPEX $45,000 100.0%" [ref=e47]:
+              - cell "OPEX" [ref=e48]
+              - cell "$45,000" [ref=e49]
+              - cell "100.0%" [ref=e50]
+            - row "GRAND TOTAL $45,000 100%" [ref=e51]:
+              - cell "GRAND TOTAL" [ref=e52]:
+                - strong [ref=e53]: GRAND TOTAL
+              - cell "$45,000" [ref=e54]
+              - cell "100%" [ref=e55]
+```

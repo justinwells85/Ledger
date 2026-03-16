@@ -17,7 +17,8 @@ public record MilestoneVersionResponse(
     UUID fiscalPeriodId,
     String fiscalPeriodKey,
     LocalDate effectiveDate,
-    String reason
+    String reason,
+    String createdBy
 ) {
     public static MilestoneVersionResponse from(MilestoneVersion v) {
         return new MilestoneVersionResponse(
@@ -27,7 +28,8 @@ public record MilestoneVersionResponse(
                 v.getFiscalPeriod().getPeriodId(),
                 v.getFiscalPeriod().getPeriodKey(),
                 v.getEffectiveDate(),
-                v.getReason()
+                v.getReason(),
+                v.getCreatedBy()
         );
     }
 }

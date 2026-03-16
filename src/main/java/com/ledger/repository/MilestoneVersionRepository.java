@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
+
 /**
  * Repository for MilestoneVersion entity.
  * Provides the core time-machine version queries (BR-40, BR-41).
@@ -43,4 +45,21 @@ public interface MilestoneVersionRepository extends JpaRepository<MilestoneVersi
     @Query("SELECT mv FROM MilestoneVersion mv WHERE mv.milestone.milestoneId = :milestoneId " +
            "ORDER BY mv.versionNumber ASC")
     List<MilestoneVersion> findVersionHistory(@Param("milestoneId") UUID milestoneId);
+
+    /**
+     * Returns the current (latest) version for ALL milestones in a single query.
+     * Eliminates the N+1 problem in ReportService and ReconciliationService.
+     */
+    @Query("SELECT mv FROM MilestoneVersion mv WHERE mv.versionNumber = " +
+           "(SELECT MAX(mv2.versionNumber) FROM MilestoneVersion mv2 " +
+           " WHERE mv2.milestone = mv.milestone)")
+    List<MilestoneVersion> findAllCurrentVersions();
+
+    /**
+     * Returns the version effective on or before asOfDate for ALL milestones in a single query.
+     */
+    @Query("SELECT mv FROM MilestoneVersion mv WHERE mv.versionNumber = " +
+           "(SELECT MAX(mv2.versionNumber) FROM MilestoneVersion mv2 " +
+           " WHERE mv2.milestone = mv.milestone AND mv2.effectiveDate <= :asOfDate)")
+    List<MilestoneVersion> findAllCurrentVersionsAsOf(@Param("asOfDate") LocalDate asOfDate);
 }

@@ -1,0 +1,81 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - navigation [ref=e5]:
+    - generic [ref=e6] [cursor=pointer]: LEDGER
+    - generic [ref=e7]:
+      - link "Portfolio" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - link "Contracts" [ref=e9] [cursor=pointer]:
+        - /url: /contracts
+      - generic [ref=e10]: OPERATIONS
+      - link "Import" [ref=e11] [cursor=pointer]:
+        - /url: /import
+      - link "Reconciliation" [ref=e12] [cursor=pointer]:
+        - /url: /reconcile
+      - generic [ref=e13]: REPORTING
+      - link "Reports" [ref=e14] [cursor=pointer]:
+        - /url: /reports
+      - link "Journal" [ref=e15] [cursor=pointer]:
+        - /url: /journal
+      - generic [ref=e16]: ADMIN
+      - link "Settings" [ref=e17] [cursor=pointer]:
+        - /url: /settings
+      - link "Users" [ref=e18] [cursor=pointer]:
+        - /url: /admin/users
+      - link "Reference Data" [ref=e19] [cursor=pointer]:
+        - /url: /admin/reference-data
+      - link "Fiscal Years" [ref=e20] [cursor=pointer]:
+        - /url: /admin/fiscal-years
+      - link "Audit Log" [ref=e21] [cursor=pointer]:
+        - /url: /admin/audit
+    - generic [ref=e22]:
+      - generic [ref=e23]: TA
+      - generic [ref=e24]:
+        - generic [ref=e25]: Test Admin
+        - generic [ref=e26]: ADMIN
+      - button "Sign out" [ref=e27] [cursor=pointer]: ⇥
+  - generic [ref=e28]:
+    - banner [ref=e29]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: Time Machine
+        - textbox "Time Machine" [ref=e33] [cursor=pointer]
+    - main [ref=e34]:
+      - generic [ref=e35]:
+        - button "Export CSV" [ref=e38] [cursor=pointer]
+        - table [ref=e40]:
+          - rowgroup [ref=e41]:
+            - row "Contract / Project Planned Actuals YTD Remaining Status" [ref=e42]:
+              - columnheader "Contract / Project" [ref=e43]
+              - columnheader "Planned" [ref=e44]
+              - columnheader "Actuals YTD" [ref=e45]
+              - columnheader "Remaining" [ref=e46]
+              - columnheader "Status" [ref=e47]
+          - rowgroup [ref=e48]:
+            - row "Globant ADM PR13752 DPI Photopass $25,000 $15,000 $10,000 UNDER BUDGET" [ref=e49]:
+              - cell "Globant ADM PR13752 DPI Photopass" [ref=e50]:
+                - generic [ref=e51]: Globant ADM
+                - generic [ref=e52]: PR13752 DPI Photopass
+              - cell "$25,000" [ref=e53]
+              - cell "$15,000" [ref=e54]
+              - cell "$10,000" [ref=e55]
+              - cell "UNDER BUDGET" [ref=e56]:
+                - generic [ref=e57]: UNDER BUDGET
+            - row "Globant ADM PR99999 Other Project $30,000 $32,000 $0 OVER BUDGET" [ref=e58]:
+              - cell "Globant ADM PR99999 Other Project" [ref=e59]:
+                - generic [ref=e60]: Globant ADM
+                - generic [ref=e61]: PR99999 Other Project
+              - cell "$30,000" [ref=e62]
+              - cell "$32,000" [ref=e63]
+              - cell "$0" [ref=e64]
+              - cell "OVER BUDGET" [ref=e65]:
+                - generic [ref=e66]: OVER BUDGET
+            - row "TOTAL REMAINING $55,000 $47,000 $10,000" [ref=e67]:
+              - cell "TOTAL REMAINING" [ref=e68]:
+                - strong [ref=e69]: TOTAL REMAINING
+              - cell "$55,000" [ref=e70]
+              - cell "$47,000" [ref=e71]
+              - cell "$10,000" [ref=e72]
+              - cell [ref=e73]
+```

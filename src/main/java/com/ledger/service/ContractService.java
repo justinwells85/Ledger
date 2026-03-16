@@ -1,10 +1,13 @@
 package com.ledger.service;
 
+import com.ledger.config.SecurityUtils;
 import com.ledger.dto.ContractCreateRequest;
 import com.ledger.dto.ContractUpdateRequest;
 import com.ledger.entity.Contract;
 import com.ledger.entity.ContractStatus;
 import com.ledger.repository.ContractRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,13 +55,13 @@ public class ContractService {
         contract.setOwnerUser(request.ownerUser());
         contract.setStartDate(request.startDate());
         contract.setEndDate(request.endDate());
-        contract.setCreatedBy("system");
+        contract.setCreatedBy(SecurityUtils.currentUsername());
 
         Contract saved = contractRepository.save(contract);
 
         // Audit log for CREATE
         auditService.log("CONTRACT", saved.getContractId().toString(), "CREATE",
-                null, null, "system");
+                null, null, SecurityUtils.currentUsername());
 
         return saved;
     }
@@ -80,39 +83,39 @@ public class ContractService {
         Map<String, Map<String, String>> changes = new LinkedHashMap<>();
 
         if (request.name() != null && !request.name().equals(existing.getName())) {
-            changes.put("name", Map.of("old", existing.getName(), "new", request.name()));
+            changes.put("name", Map.of("before", existing.getName(), "after", request.name()));
             existing.setName(request.name());
         }
         if (request.vendor() != null && !request.vendor().equals(existing.getVendor())) {
-            changes.put("vendor", Map.of("old", existing.getVendor(), "new", request.vendor()));
+            changes.put("vendor", Map.of("before", existing.getVendor(), "after", request.vendor()));
             existing.setVendor(request.vendor());
         }
         if (request.description() != null && !request.description().equals(nullToEmpty(existing.getDescription()))) {
             changes.put("description", Map.of(
-                    "old", nullToEmpty(existing.getDescription()),
-                    "new", request.description()));
+                    "before", nullToEmpty(existing.getDescription()),
+                    "after", request.description()));
             existing.setDescription(request.description());
         }
         if (request.ownerUser() != null && !request.ownerUser().equals(existing.getOwnerUser())) {
-            changes.put("ownerUser", Map.of("old", existing.getOwnerUser(), "new", request.ownerUser()));
+            changes.put("ownerUser", Map.of("before", existing.getOwnerUser(), "after", request.ownerUser()));
             existing.setOwnerUser(request.ownerUser());
         }
         if (request.startDate() != null && !request.startDate().equals(existing.getStartDate())) {
             changes.put("startDate", Map.of(
-                    "old", existing.getStartDate().toString(),
-                    "new", request.startDate().toString()));
+                    "before", existing.getStartDate().toString(),
+                    "after", request.startDate().toString()));
             existing.setStartDate(request.startDate());
         }
         if (request.endDate() != null && !request.endDate().equals(existing.getEndDate())) {
             changes.put("endDate", Map.of(
-                    "old", existing.getEndDate() != null ? existing.getEndDate().toString() : "",
-                    "new", request.endDate().toString()));
+                    "before", existing.getEndDate() != null ? existing.getEndDate().toString() : "",
+                    "after", request.endDate().toString()));
             existing.setEndDate(request.endDate());
         }
         if (request.status() != null) {
             ContractStatus newStatus = ContractStatus.valueOf(request.status());
             if (newStatus != existing.getStatus()) {
-                changes.put("status", Map.of("old", existing.getStatus().name(), "new", newStatus.name()));
+                changes.put("status", Map.of("before", existing.getStatus().name(), "after", newStatus.name()));
                 existing.setStatus(newStatus);
             }
         }
@@ -122,7 +125,7 @@ public class ContractService {
         // Audit log for UPDATE (only if something changed)
         if (!changes.isEmpty()) {
             auditService.log("CONTRACT", saved.getContractId().toString(), "UPDATE",
-                    changes, request.reason(), "system");
+                    changes, request.reason(), SecurityUtils.currentUsername());
         }
 
         return saved;
@@ -145,7 +148,8 @@ public class ContractService {
         if (status != null) {
             return contractRepository.findByStatus(status);
         }
-        return contractRepository.findAll();
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        return contractRepository.findAll(PageRequest.of(0, 200, sort)).getContent();
     }
 
     private String nullToEmpty(String value) {

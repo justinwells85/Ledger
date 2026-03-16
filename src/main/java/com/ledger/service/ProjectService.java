@@ -1,15 +1,20 @@
 package com.ledger.service;
 
+import com.ledger.config.SecurityUtils;
 import com.ledger.dto.ProjectCreateRequest;
+import com.ledger.dto.ProjectUpdateRequest;
 import com.ledger.entity.Contract;
 import com.ledger.entity.FundingSource;
 import com.ledger.entity.Project;
+import com.ledger.entity.ProjectStatus;
 import com.ledger.repository.ContractRepository;
 import com.ledger.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -22,10 +27,13 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ContractRepository contractRepository;
+    private final AuditService auditService;
 
-    public ProjectService(ProjectRepository projectRepository, ContractRepository contractRepository) {
+    public ProjectService(ProjectRepository projectRepository, ContractRepository contractRepository,
+                          AuditService auditService) {
         this.projectRepository = projectRepository;
         this.contractRepository = contractRepository;
+        this.auditService = auditService;
     }
 
     /**
@@ -55,9 +63,49 @@ public class ProjectService {
         project.setWbse(request.wbse());
         project.setName(request.name());
         project.setFundingSource(fundingSource);
-        project.setCreatedBy("system");
+        project.setCreatedBy(SecurityUtils.currentUsername());
 
         return projectRepository.save(project);
+    }
+
+    /**
+     * Update an existing project.
+     * Requires reason field. Logs UPDATE to audit_log.
+     * Spec: 11-change-management.md Section 2.2
+     */
+    public Project updateProject(String projectId, ProjectUpdateRequest request) {
+        if (request.reason() == null || request.reason().isBlank()) {
+            throw new IllegalArgumentException("reason is required for project updates");
+        }
+
+        Project existing = projectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Project not found: " + projectId));
+
+        Map<String, Map<String, String>> changes = new LinkedHashMap<>();
+
+        if (request.name() != null && !request.name().equals(existing.getName())) {
+            changes.put("name", Map.of("before", existing.getName(), "after", request.name()));
+            existing.setName(request.name());
+        }
+        if (request.wbse() != null && !request.wbse().equals(existing.getWbse())) {
+            changes.put("wbse", Map.of("before", existing.getWbse(), "after", request.wbse()));
+            existing.setWbse(request.wbse());
+        }
+        if (request.status() != null) {
+            ProjectStatus newStatus = ProjectStatus.valueOf(request.status());
+            if (newStatus != existing.getStatus()) {
+                changes.put("status", Map.of("before", existing.getStatus().name(), "after", newStatus.name()));
+                existing.setStatus(newStatus);
+            }
+        }
+
+        Project saved = projectRepository.save(existing);
+
+        if (!changes.isEmpty()) {
+            auditService.log("PROJECT", projectId, "UPDATE", changes, request.reason(), SecurityUtils.currentUsername());
+        }
+
+        return saved;
     }
 
     /**

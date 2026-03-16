@@ -1,0 +1,162 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 1400px;
+}
+
+/* ─── Toolbar ──────────────────────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.toolbar h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-navy);
+  margin: 0;
+}
+
+.btnExport {
+  padding: 7px 16px;
+  background: var(--color-navy);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.1s;
+}
+
+.btnExport:hover { opacity: 0.85; }
+
+/* ─── Filter bar ───────────────────────────────────────────────────────────── */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filterInput,
+.filterSelect {
+  padding: 6px 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+  background: var(--color-white);
+}
+
+.filterInput:focus,
+.filterSelect:focus {
+  outline: 2px solid var(--color-blue);
+  outline-offset: -2px;
+  border-color: transparent;
+}
+
+/* ─── Table ────────────────────────────────────────────────────────────────── */
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  box-shadow: var(--shadow-card);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.table th {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  vertical-align: top;
+}
+
+.table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:hover td { background: var(--color-surface); }
+
+.mono {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+/* ─── Changes expand ───────────────────────────────────────────────────────── */
+.btnExpand {
+  padding: 2px 8px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family);
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: background 0.1s;
+}
+
+.btnExpand:hover { background: var(--color-surface); }
+
+.detailRow td {
+  background: var(--color-surface);
+  padding: var(--space-3) var(--space-5);
+}
+
+.changesTable {
+  border-collapse: collapse;
+  font-size: var(--font-size-xs);
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.changesTable th,
+.changesTable td {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.changesTable th {
+  background: var(--color-surface);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.changesTable tr:last-child td { border-bottom: none; }
+
+.before { color: var(--color-negative); }
+.after  { color: var(--color-positive); }
+
+.empty {
+  text-align: center;
+  color: var(--color-text-disabled);
+  padding: var(--space-8);
+  font-size: var(--font-size-sm);
+}

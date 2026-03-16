@@ -1,5 +1,6 @@
 package com.ledger.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,6 +51,7 @@ public class JournalEntry {
     @Column(name = "created_by", nullable = false, length = 100)
     private String createdBy;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "journalEntry", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JournalLine> lines = new ArrayList<>();
 

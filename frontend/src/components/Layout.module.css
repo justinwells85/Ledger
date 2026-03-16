@@ -1,0 +1,269 @@
+/* ─── Shell ───────────────────────────────────────────────────────────────── */
+.shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.body {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ─── Side navigation ─────────────────────────────────────────────────────── */
+.sideNav {
+  width: 220px;
+  min-width: 220px;
+  background: var(--color-navy);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.navHeader {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.12em;
+  color: var(--color-text-inverse);
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.navLinks {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3) 0;
+}
+
+/* Scrollbar — minimal, invisible-ish on nav */
+.navLinks::-webkit-scrollbar { width: 4px; }
+.navLinks::-webkit-scrollbar-track { background: transparent; }
+.navLinks::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+
+.navItem {
+  display: block;
+  padding: 9px var(--space-6);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  color: rgba(255, 255, 255, 0.70);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: background 0.1s, color 0.1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navItem:hover {
+  background: var(--color-navy-subtle);
+  background: rgba(255,255,255,0.06);
+  color: var(--color-text-inverse);
+  text-decoration: none;
+}
+
+.navItemActive {
+  border-left-color: var(--color-blue);
+  background: var(--color-blue-subtle);
+  background: rgba(34, 81, 255, 0.12);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-medium);
+}
+
+.navSection {
+  padding: var(--space-4) var(--space-6) var(--space-1);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  margin-top: var(--space-2);
+}
+
+/* ─── Nav footer (user) ───────────────────────────────────────────────────── */
+.navFooter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  color: var(--color-text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.userDetails {
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.userName {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: rgba(255,255,255,0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userRole {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: rgba(255,255,255,0.40);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.signOutBtn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.20);
+  border-radius: var(--radius-md);
+  color: rgba(255,255,255,0.50);
+  cursor: pointer;
+  font-size: 14px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.1s, color 0.1s;
+}
+
+.signOutBtn:hover {
+  border-color: rgba(255,255,255,0.50);
+  color: var(--color-text-inverse);
+}
+
+/* ─── Content column ──────────────────────────────────────────────────────── */
+.contentColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ─── Time machine banner ─────────────────────────────────────────────────── */
+.timeMachineBanner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: 0 var(--space-6);
+  height: 44px;
+  background: var(--color-warning-bg);
+  border-bottom: 1px solid var(--color-warning);
+  color: var(--color-warning);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  flex-shrink: 0;
+}
+
+.timeMachineBanner strong {
+  font-weight: var(--font-weight-semibold);
+}
+
+.bannerReset {
+  padding: 3px 10px;
+  background: var(--color-warning);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: opacity 0.1s;
+}
+
+.bannerReset:hover { opacity: 0.85; }
+
+/* ─── Top bar ─────────────────────────────────────────────────────────────── */
+.topBar {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-8);
+  background: var(--color-surface-raised);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.topBarLeft {
+  flex: 1;
+}
+
+.topBarRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.timeMachineControl {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: default;
+}
+
+.timeMachineLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.timeMachineInput {
+  padding: 4px 8px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+  background: var(--color-white);
+  cursor: pointer;
+}
+
+.timeMachineInput:focus {
+  outline: none;
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 2px rgba(34,81,255,0.12);
+}
+
+/* ─── Main content ────────────────────────────────────────────────────────── */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-8);
+  background: var(--color-surface);
+}
+
+/* Scrollbar — clean */
+.content::-webkit-scrollbar { width: 6px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+.content::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 3px; }
+.content::-webkit-scrollbar-thumb:hover { background: var(--color-text-disabled); }

@@ -22,6 +22,8 @@ These specs define the complete behavior of the Ledger application. They are the
 | 14 | [ui-views.md](./14-ui-views.md) | React views, wireframes, routes, view-to-API mapping | All |
 | 15 | [tier1-tasks.md](./15-tier1-tasks.md) | 36 implementation tasks, dependency order, 124+ test cases | All |
 | 16 | [test-plan.md](./16-test-plan.md) | Complete test plan: unit, integration, E2E, frontend, traceability matrix | All |
+| 17 | [personas-and-use-cases.md](./17-personas-and-use-cases.md) | User personas, scenario inventory, implementation coverage map | All |
+| 18 | [admin-configuration.md](./18-admin-configuration.md) | User management, fiscal year admin, reference data, audit log viewer | BR-80 through BR-101 |
 
 ## Development Methodology
 
@@ -60,3 +62,14 @@ This project follows **spec-driven development with TDD**:
 - Bulk reconciliation
 - Pattern learning
 - Notifications
+
+### Tier 4: Administration & Multi-User
+- Individual user accounts with roles (ADMIN, FINANCE_MANAGER, ANALYST, READ_ONLY)
+- Fiscal year management UI
+- Reference data management (funding sources, statuses, categories)
+- Data-driven Settings page
+- Audit log viewer with export
+- Core CRUD UI: Create Contract, Create/Edit/Cancel Milestone
+- Reconcile workspace: undo and filters
+- Milestone version history timeline
+- Forecast Report and Funding Report completion

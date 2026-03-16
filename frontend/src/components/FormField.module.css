@@ -1,0 +1,40 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.req {
+  color: #c0392b;
+  margin-left: 2px;
+}
+
+.control {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+.control:focus {
+  outline: none;
+  border-color: #1a1a2e;
+  box-shadow: 0 0 0 2px rgba(26,26,46,0.12);
+}
+
+.hasError {
+  border-color: #c0392b;
+}
+
+.error {
+  font-size: 0.75rem;
+  color: #c0392b;
+}

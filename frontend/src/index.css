@@ -1,0 +1,146 @@
+/* ─── Google Fonts — Inter ────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ─── Design Tokens ───────────────────────────────────────────────────────── */
+:root {
+  /* Brand */
+  --color-navy:           #051C2C;
+  --color-blue:           #2251FF;
+  --color-blue-hover:     #1A3FCC;
+  --color-blue-subtle:    rgba(34, 81, 255, 0.06);
+  --color-navy-subtle:    rgba(5, 28, 44, 0.04);
+
+  /* Surfaces */
+  --color-white:          #FFFFFF;
+  --color-surface:        #FAFAFA;
+  --color-surface-raised: #FFFFFF;
+
+  /* Borders */
+  --color-border:         #E8E8E8;
+  --color-border-strong:  #C8C8C8;
+
+  /* Text */
+  --color-text-primary:   #1A1A1A;
+  --color-text-secondary: #5C5C5C;
+  --color-text-disabled:  #A0A0A0;
+  --color-text-inverse:   #FFFFFF;
+
+  /* Status */
+  --color-positive:       #006633;
+  --color-positive-bg:    #F0F7F4;
+  --color-warning:        #8C5E00;
+  --color-warning-bg:     #FFF8EC;
+  --color-negative:       #C0001E;
+  --color-negative-bg:    #FFF2F4;
+  --color-neutral:        #5C5C5C;
+  --color-neutral-bg:     #F5F5F5;
+
+  /* Variance */
+  --color-variance-explained:   #5C5C5C;
+  --color-variance-unexplained: #C0001E;
+
+  /* Typography */
+  --font-family:          'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-xs:         11px;
+  --font-size-sm:         12px;
+  --font-size-base:       14px;
+  --font-size-md:         15px;
+  --font-size-lg:         18px;
+  --font-size-xl:         22px;
+  --font-size-2xl:        28px;
+
+  --font-weight-regular:  400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  --line-height-tight:    1.2;
+  --line-height-base:     1.5;
+  --line-height-relaxed:  1.7;
+
+  /* Spacing (4px base) */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Elevation */
+  --shadow-card:  0 1px 3px rgba(5,28,44,0.08), 0 1px 2px rgba(5,28,44,0.05);
+  --shadow-panel: 0 4px 16px rgba(5,28,44,0.12);
+  --shadow-modal: 0 8px 32px rgba(5,28,44,0.18);
+
+  /* Border radius */
+  --radius-sm:   2px;
+  --radius-md:   4px;
+  --radius-lg:   8px;
+  --radius-xl:  12px;
+}
+
+/* ─── Global Reset ────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── Base ────────────────────────────────────────────────────────────────── */
+html {
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-base);
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+}
+
+/* ─── Typography defaults ─────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-navy);
+}
+
+h1 { font-size: var(--font-size-2xl); }
+h2 { font-size: var(--font-size-xl);  }
+h3 { font-size: var(--font-size-lg);  }
+h4 { font-size: var(--font-size-md);  }
+
+a {
+  color: var(--color-blue);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+button {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+}
+
+input, select, textarea {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+}
+
+/* ─── Utility classes ─────────────────────────────────────────────────────── */
+.text-secondary { color: var(--color-text-secondary); }
+.text-sm        { font-size: var(--font-size-sm); }
+.text-xs        { font-size: var(--font-size-xs); }
+.font-medium    { font-weight: var(--font-weight-medium); }
+.font-semibold  { font-weight: var(--font-weight-semibold); }
+.text-right     { text-align: right; }
+.text-mono      { font-family: 'SF Mono', 'Fira Code', monospace; }

@@ -227,8 +227,8 @@ class ContractIntegrationTest extends BaseIntegrationTest {
 
         var changes = updateLog.getChanges();
         assertThat(changes).containsKey("ownerUser");
-        assertThat(changes.get("ownerUser").get("old")).isEqualTo("Rob");
-        assertThat(changes.get("ownerUser").get("new")).isEqualTo("Brad");
+        assertThat(changes.get("ownerUser").get("before")).isEqualTo("Rob");
+        assertThat(changes.get("ownerUser").get("after")).isEqualTo("Brad");
     }
 
     /**

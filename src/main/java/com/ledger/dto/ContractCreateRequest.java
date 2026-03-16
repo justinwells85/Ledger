@@ -1,5 +1,7 @@
 package com.ledger.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -7,11 +9,11 @@ import java.time.LocalDate;
  * Spec: 13-api-design.md Section 3
  */
 public record ContractCreateRequest(
-        String name,
-        String vendor,
+        @NotBlank String name,
+        @NotBlank String vendor,
         String description,
-        String ownerUser,
-        LocalDate startDate,
+        @NotBlank String ownerUser,
+        @NotNull LocalDate startDate,
         LocalDate endDate
 ) {
 }

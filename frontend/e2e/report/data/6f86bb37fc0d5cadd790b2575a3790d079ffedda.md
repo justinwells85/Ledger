@@ -1,0 +1,65 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - navigation [ref=e5]:
+    - generic [ref=e6] [cursor=pointer]: LEDGER
+    - generic [ref=e7]:
+      - link "Portfolio" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - link "Contracts" [ref=e9] [cursor=pointer]:
+        - /url: /contracts
+      - generic [ref=e10]: OPERATIONS
+      - link "Import" [ref=e11] [cursor=pointer]:
+        - /url: /import
+      - link "Reconciliation" [ref=e12] [cursor=pointer]:
+        - /url: /reconcile
+      - generic [ref=e13]: REPORTING
+      - link "Reports" [ref=e14] [cursor=pointer]:
+        - /url: /reports
+      - link "Journal" [ref=e15] [cursor=pointer]:
+        - /url: /journal
+      - generic [ref=e16]: ADMIN
+      - link "Settings" [ref=e17] [cursor=pointer]:
+        - /url: /settings
+      - link "Users" [ref=e18] [cursor=pointer]:
+        - /url: /admin/users
+      - link "Reference Data" [ref=e19] [cursor=pointer]:
+        - /url: /admin/reference-data
+      - link "Fiscal Years" [ref=e20] [cursor=pointer]:
+        - /url: /admin/fiscal-years
+      - link "Audit Log" [ref=e21] [cursor=pointer]:
+        - /url: /admin/audit
+    - generic [ref=e22]:
+      - generic [ref=e23]: TA
+      - generic [ref=e24]:
+        - generic [ref=e25]: Test Admin
+        - generic [ref=e26]: ADMIN
+      - button "Sign out" [ref=e27] [cursor=pointer]: ⇥
+  - generic [ref=e28]:
+    - banner [ref=e29]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: Time Machine
+        - textbox "Time Machine" [ref=e33] [cursor=pointer]
+    - main [ref=e34]:
+      - table [ref=e37]:
+        - rowgroup [ref=e38]:
+          - row "Contract Project Milestone Period Open Accruals Age (days) Status" [ref=e39]:
+            - columnheader "Contract" [ref=e40]
+            - columnheader "Project" [ref=e41]
+            - columnheader "Milestone" [ref=e42]
+            - columnheader "Period" [ref=e43]
+            - columnheader "Open Accruals" [ref=e44]
+            - columnheader "Age (days)" [ref=e45]
+            - columnheader "Status" [ref=e46]
+        - rowgroup [ref=e47]:
+          - row "Globant ADM DPI Photopass January Sustainment FY26-04-JAN 2 65 WARNING" [ref=e48]:
+            - cell "Globant ADM" [ref=e49]
+            - cell "DPI Photopass" [ref=e50]
+            - cell "January Sustainment" [ref=e51]
+            - cell "FY26-04-JAN" [ref=e52]
+            - cell "2" [ref=e53]
+            - cell "65" [ref=e54]
+            - cell "WARNING" [ref=e55]:
+              - generic [ref=e56]: WARNING
+```

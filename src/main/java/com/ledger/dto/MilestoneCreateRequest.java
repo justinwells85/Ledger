@@ -1,5 +1,7 @@
 package com.ledger.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -9,10 +11,10 @@ import java.util.UUID;
  * Spec: 13-api-design.md Section 5, 04-milestone-versioning.md
  */
 public record MilestoneCreateRequest(
-    String name,
+    @NotBlank String name,
     String description,
-    BigDecimal plannedAmount,
-    UUID fiscalPeriodId,
-    LocalDate effectiveDate,
-    String reason
+    @NotNull BigDecimal plannedAmount,
+    @NotNull UUID fiscalPeriodId,
+    @NotNull LocalDate effectiveDate,
+    @NotBlank String reason
 ) {}

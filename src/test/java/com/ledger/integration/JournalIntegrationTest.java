@@ -211,6 +211,57 @@ class JournalIntegrationTest extends BaseIntegrationTest {
     }
 
     /**
+     * T06-9 / I-JRN-06: 4-line period shift entry balances (debit total = credit total).
+     * Spec: 02-journal-ledger.md Section 5.3, BR-01
+     *
+     * GIVEN a period shift: credit PLANNED $20K from JAN, debit PLANNED $22K to FEB
+     * WHEN  createEntry is called with 4 lines totaling $42K each side
+     * THEN  entry persists with 4 lines and is balanced
+     */
+    @Test
+    void fourLinePeriodShift_persistsAndBalances() {
+        var janPeriodId = fiscalPeriodId; // reuse existing period as "JAN"
+        // Use a different period for "FEB"
+        var febPeriodId = fiscalPeriodRepository.findAll().stream()
+                .filter(p -> !p.getPeriodId().equals(janPeriodId))
+                .findFirst().orElseThrow().getPeriodId();
+
+        List<JournalLineRequest> lines = List.of(
+                // Remove from JAN: credit PLANNED $20K, debit VARIANCE_RESERVE $20K
+                new JournalLineRequest(
+                        AccountType.VARIANCE_RESERVE, contractId, projectId, milestoneId, janPeriodId,
+                        new BigDecimal("20000.00"), BigDecimal.ZERO, null, null),
+                new JournalLineRequest(
+                        AccountType.PLANNED, contractId, projectId, milestoneId, janPeriodId,
+                        BigDecimal.ZERO, new BigDecimal("20000.00"), null, null),
+                // Add to FEB: debit PLANNED $22K, credit VARIANCE_RESERVE $22K
+                new JournalLineRequest(
+                        AccountType.PLANNED, contractId, projectId, milestoneId, febPeriodId,
+                        new BigDecimal("22000.00"), BigDecimal.ZERO, null, null),
+                new JournalLineRequest(
+                        AccountType.VARIANCE_RESERVE, contractId, projectId, milestoneId, febPeriodId,
+                        BigDecimal.ZERO, new BigDecimal("22000.00"), null, null)
+        );
+
+        JournalEntry entry = journalService.createEntry(
+                JournalEntryType.PLAN_ADJUST,
+                LocalDate.of(2026, 2, 1),
+                "Period shift JAN → FEB",
+                "system",
+                lines);
+
+        JournalEntry found = journalEntryRepository.findById(entry.getEntryId()).orElseThrow();
+        assertThat(found.getLines()).hasSize(4);
+
+        java.math.BigDecimal totalDebit = found.getLines().stream()
+                .map(l -> l.getDebit()).reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+        java.math.BigDecimal totalCredit = found.getLines().stream()
+                .map(l -> l.getCredit()).reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+        assertThat(totalDebit).isEqualByComparingTo(new BigDecimal("42000.00"));
+        assertThat(totalCredit).isEqualByComparingTo(new BigDecimal("42000.00"));
+    }
+
+    /**
      * I-JRN-05: Balance query with asOfDate filters correctly.
      * Spec: 02-journal-ledger.md Section 6, BR-41
      *

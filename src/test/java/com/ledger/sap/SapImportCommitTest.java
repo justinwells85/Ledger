@@ -3,6 +3,7 @@ package com.ledger.sap;
 import com.ledger.BaseIntegrationTest;
 import com.ledger.entity.*;
 import com.ledger.repository.*;
+import com.ledger.service.SapImportService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,6 +48,9 @@ class SapImportCommitTest extends BaseIntegrationTest {
 
     @Autowired
     private ReconciliationRepository reconciliationRepository;
+
+    @Autowired
+    private SapImportService sapImportService;
 
     @BeforeEach
     void setUp() {
@@ -189,5 +194,57 @@ class SapImportCommitTest extends BaseIntegrationTest {
 
         // Lines still exist in the staging table but no journal entries
         assertThat(journalEntryRepository.findAll()).isEmpty();
+    }
+
+    // TEST T13-6: Cannot commit an already-committed import — BR-72
+    // Spec: 05-sap-ingestion.md BR-72
+    @Test
+    void commit_alreadyCommitted_returns400() throws Exception {
+        String importId = uploadAndGetImportId(3);
+
+        // First commit succeeds
+        mockMvc.perform(post("/api/v1/imports/{id}/commit", importId))
+                .andExpect(status().isOk());
+
+        // Second commit returns 400
+        mockMvc.perform(post("/api/v1/imports/{id}/commit", importId))
+                .andExpect(status().isBadRequest());
+    }
+
+    // TEST T13-7: Duplicate lines are stored with is_duplicate = true — BR-09
+    // Spec: 05-sap-ingestion.md BR-09
+    @Test
+    void commit_duplicateLines_storedWithIsDuplicateFlag() throws Exception {
+        // First import: 3 lines — all new
+        String csv1 = CSV_HEADER
+                + "DOC1,2026-01-15,1000,Globant,CC001,1174905.SU.ES,500000,Line1\n"
+                + "DOC2,2026-01-15,2000,Globant,CC001,1174905.SU.ES,500000,Line2\n"
+                + "DOC3,2026-01-15,3000,Globant,CC001,1174905.SU.ES,500000,Line3\n";
+        MockMultipartFile file1 = new MockMultipartFile("file", "first.csv", "text/csv", csv1.getBytes());
+        SapImport import1 = sapImportService.uploadAndStage(file1, "system");
+        sapImportService.commitImport(import1.getImportId(), "system");
+
+        // Second import: 2 of the same lines (duplicates) + 2 new lines
+        String csv2 = CSV_HEADER
+                + "DOC1,2026-01-15,1000,Globant,CC001,1174905.SU.ES,500000,Line1\n"
+                + "DOC2,2026-01-15,2000,Globant,CC001,1174905.SU.ES,500000,Line2\n"
+                + "DOC4,2026-01-15,4000,Globant,CC001,1174905.SU.ES,500000,Line4\n"
+                + "DOC5,2026-01-15,5000,Globant,CC001,1174905.SU.ES,500000,Line5\n";
+        MockMultipartFile file2 = new MockMultipartFile("file", "second.csv", "text/csv", csv2.getBytes());
+        SapImport import2 = sapImportService.uploadAndStage(file2, "system");
+        sapImportService.commitImport(import2.getImportId(), "system");
+
+        // Verify import2's lines: 2 new, 2 duplicate
+        var import2Lines = actualLineRepository.findBySapImportAndDuplicate(import2, false);
+        assertThat(import2Lines).hasSize(2); // DOC4, DOC5
+
+        var import2Dupes = actualLineRepository.findBySapImportAndDuplicate(import2, true);
+        assertThat(import2Dupes).hasSize(2); // DOC1, DOC2
+
+        // Only new lines from import2 get journal entries (import1 had 3, import2 adds 2)
+        long actualImportEntries = journalEntryRepository.findAll().stream()
+                .filter(e -> e.getEntryType() == JournalEntryType.ACTUAL_IMPORT)
+                .count();
+        assertThat(actualImportEntries).isEqualTo(5); // 3 from import1 + 2 from import2
     }
 }

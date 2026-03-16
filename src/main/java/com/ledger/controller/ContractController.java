@@ -6,13 +6,14 @@ import com.ledger.dto.ContractUpdateRequest;
 import com.ledger.entity.ContractStatus;
 import com.ledger.service.ContractService;
 import com.ledger.service.DuplicateContractNameException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,7 +64,7 @@ public class ContractController {
      * Create a new contract.
      */
     @PostMapping
-    public ResponseEntity<ContractResponse> createContract(@RequestBody ContractCreateRequest request) {
+    public ResponseEntity<ContractResponse> createContract(@Valid @RequestBody ContractCreateRequest request) {
         var contract = contractService.createContract(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ContractResponse.from(contract));
     }
@@ -72,7 +73,7 @@ public class ContractController {
      * PUT /api/v1/contracts/{contractId}
      * Update contract metadata. Requires reason for audit.
      */
-    @PutMapping("/{contractId}")
+    @RequestMapping(value = "/{contractId}", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ContractResponse updateContract(
             @PathVariable UUID contractId,
             @RequestBody ContractUpdateRequest request) {

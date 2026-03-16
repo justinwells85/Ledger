@@ -1,0 +1,172 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 1400px;
+}
+
+/* ─── Toolbar ──────────────────────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.toolbar h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-navy);
+  margin: 0;
+}
+
+.btnNew {
+  padding: 7px 16px;
+  background: var(--color-navy);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: opacity 0.1s;
+}
+
+.btnNew:hover { opacity: 0.85; }
+
+/* ─── Table ────────────────────────────────────────────────────────────────── */
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  box-shadow: var(--shadow-card);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-base);
+}
+
+.table th {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:hover td { background: var(--color-surface); }
+
+.inactiveRow td { color: var(--color-text-disabled); }
+
+/* ─── Role badge ───────────────────────────────────────────────────────────── */
+.roleBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-neutral-bg);
+  color: var(--color-neutral);
+  letter-spacing: 0.02em;
+}
+
+.roleBadge.admin          { background: #ede8f8; color: #5020a0; }
+.roleBadge.analyst        { background: var(--color-blue-subtle); color: var(--color-blue); }
+.roleBadge.finance_manager{ background: #eaf8e8; color: var(--color-positive); }
+.roleBadge.read_only      { background: var(--color-surface); color: var(--color-text-secondary); }
+
+/* ─── Action buttons ───────────────────────────────────────────────────────── */
+.btnDeactivate {
+  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid var(--color-negative);
+  color: var(--color-negative);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.btnDeactivate:hover { background: var(--color-negative-bg); }
+
+.btnReactivate {
+  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid var(--color-positive);
+  color: var(--color-positive);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.btnReactivate:hover { background: #eaf8e8; }
+
+.empty {
+  text-align: center;
+  color: var(--color-text-disabled);
+  padding: var(--space-8);
+  font-size: var(--font-size-sm);
+}
+
+/* ─── Drawer actions ───────────────────────────────────────────────────────── */
+.saveError {
+  color: var(--color-negative);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-2);
+}
+
+.drawerActions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}
+
+.btnCancel {
+  padding: 7px 14px;
+  background: transparent;
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.btnCancel:hover { background: var(--color-surface); }
+
+.btnCreate {
+  padding: 7px 16px;
+  background: var(--color-navy);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: opacity 0.1s;
+}
+
+.btnCreate:hover { opacity: 0.85; }
+.btnCreate:disabled { opacity: 0.5; cursor: not-allowed; }

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+e2e/
+.cache/
+playwright-report/
+e2e/test-results/
+e2e/screenshots/
+*.md

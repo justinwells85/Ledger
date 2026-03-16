@@ -36,35 +36,39 @@ class DatabaseMigrationTest extends BaseIntegrationTest {
      * T02-1: All migrations run successfully.
      * GIVEN an empty PostgreSQL database
      * WHEN  the application starts
-     * THEN  Flyway reports 8 migrations applied
-     * AND   all 13 tables exist
+     * THEN  Flyway reports 10 migrations applied (V001-V010)
+     * AND   all 14 tables exist
      *
      * Spec: 12-database-schema.md | Migration Inventory
      */
     @Test
     void allMigrationsRunSuccessfully() {
-        // Verify Flyway applied exactly 8 migrations
+        // Verify Flyway applied exactly 12 migrations (V001-V012)
         Integer migrationCount = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM flyway_schema_history WHERE success = true",
                 Integer.class
         );
-        assertThat(migrationCount).isEqualTo(8);
+        assertThat(migrationCount).isEqualTo(12);
 
-        // Verify all 13 tables exist (V001 through V007 create tables, V008 is seed data)
+        // Verify all tables exist (V001 through V011 create tables, V008-V009 are seed/index)
         List<String> expectedTables = List.of(
-                "fiscal_year",       // V001
-                "fiscal_period",     // V001
-                "contract",          // V002
-                "project",           // V002
-                "milestone",         // V003
-                "milestone_version", // V003
-                "journal_entry",     // V004
-                "journal_line",      // V004
-                "sap_import",        // V005
-                "actual_line",       // V005
-                "reconciliation",    // V006
-                "audit_log",         // V007
-                "system_config"      // V007
+                "fiscal_year",                // V001
+                "fiscal_period",              // V001
+                "contract",                   // V002
+                "project",                    // V002
+                "milestone",                  // V003
+                "milestone_version",          // V003
+                "journal_entry",              // V004
+                "journal_line",               // V004
+                "sap_import",                 // V005
+                "actual_line",                // V005
+                "reconciliation",             // V006
+                "audit_log",                  // V007
+                "system_config",              // V007
+                "ref_funding_source",         // V011
+                "ref_contract_status",        // V011
+                "ref_project_status",         // V011
+                "ref_reconciliation_category" // V011
         );
 
         for (String table : expectedTables) {

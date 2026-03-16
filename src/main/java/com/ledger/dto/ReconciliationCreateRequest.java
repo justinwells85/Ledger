@@ -1,5 +1,6 @@
 package com.ledger.dto;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
@@ -7,8 +8,8 @@ import java.util.UUID;
  * Spec: 06-reconciliation.md Section 3.4
  */
 public record ReconciliationCreateRequest(
-    UUID actualId,
-    UUID milestoneId,
-    String category,
+    @NotNull UUID actualId,
+    @NotNull UUID milestoneId,
+    @NotNull String category,
     String matchNotes
 ) {}
